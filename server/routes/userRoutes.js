@@ -18,4 +18,9 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+router
+  .route('/journeys/:id')
+  .get(userController.getUserJourneys)
+  .patch(userController.createUserJourney);
+
 module.exports = router;

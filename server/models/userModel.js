@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
+const JourneySchema = require('./journeyModel');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -31,6 +33,10 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords are not the same',
     },
+  },
+  journeys: {
+    type: [JourneySchema],
+    default: [],
   },
   passwordChangedAt: Date,
 });
