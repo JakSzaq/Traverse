@@ -46,11 +46,11 @@ exports.signin = catchAsync(async (req, res, next) => {
 
   // 3) If everything ok, send token to client
   const token = signToken(user._id);
-  const { _id, name } = user;
+  const { _id, name, journeys } = user;
   res.status(200).json({
     status: 'success',
     token,
-    user: { id: _id, name, email },
+    user: { id: _id, name, email, journeys },
   });
 });
 
