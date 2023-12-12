@@ -17,27 +17,23 @@ const SignInPage = () => {
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/users/signin",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email, password: password }),
-        }
-      );
-      const data = await response.json();
-      const token = data.token;
-      console.log(token);
-      alert("Login successful");
-      setEmail("");
-      setPassword("");
-      navigate("/dashboard");
-      window.location.reload();
-      localStorage.setItem("token", token);
-    } catch (error) {
-      console.log("Unable to sign in", error);
+    const response = await fetch("http://localhost:5000/api/v1/users/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, password: password }),
+    });
+    const data = await response.json();
+    if (data.status === "fail" || data.status === "error") {
+      alert("Login failed");
+      return;
     }
+    alert("Login successful");
+    setEmail("");
+    setPassword("");
+    navigate("/dashboard");
+    window.location.reload();
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
   };
 
   return (

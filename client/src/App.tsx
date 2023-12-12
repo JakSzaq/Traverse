@@ -20,7 +20,7 @@ function App() {
           <Route
             path="/"
             element={
-              token == null ? (
+              token == undefined ? (
                 <WelcomePage />
               ) : (
                 <Navigate to="/dashboard" replace />
@@ -30,7 +30,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              token == null ? (
+              token == undefined ? (
                 <SignUpPage />
               ) : (
                 <Navigate to="/dashboard" replace />
@@ -40,14 +40,14 @@ function App() {
           <Route
             path="/signin"
             element={
-              token == null ? (
+              token == undefined ? (
                 <SignInPage />
               ) : (
                 <Navigate to="/dashboard" replace />
               )
             }
           />
-          {token !== null && (
+          {token !== undefined && (
             <Route path="/dashboard">
               <Route index element={<DashboardPage />} />
               <Route path="new" element={<NewJourneyPage />} />

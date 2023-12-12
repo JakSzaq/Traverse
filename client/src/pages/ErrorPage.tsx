@@ -5,7 +5,7 @@ import logoIcon from "../assets/icons/traverse_icon.svg";
 import { useCountdown } from "../hooks/useCountdown";
 
 const ErrorPage = () => {
-  const [time, label] = useCountdown(10);
+  const [time, label] = useCountdown(5);
   const navigate = useNavigate();
 
   if (time == 0 && label == "sekund") {

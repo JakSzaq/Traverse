@@ -8,17 +8,39 @@ import { useNavigate } from "react-router-dom";
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [journeys, setJourneys] = useState<object[]>([{}]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <div className="content w-full h-screen relative bg-back-color z-0 flex flex-col flex-wrap justify-center items-center">
       <Navbar />
-      <div className="panel w-[500px] h-full flex flex-col justify-center items-center gap-6">
+      <div className="panel w-[600px] h-full flex flex-col justify-center items-center gap-6">
         <h1 className="text-7xl font-normal">
-          Witaj, <span className="text-primary-color font-bold">Tomek</span>
+          Witaj,{" "}
+          <span className="text-primary-color font-bold">{user.name}</span>
         </h1>
         <h3 className="text-4xl">Poniżej są twoje podróże</h3>
-        <div className="journeys w-full">
-          {/* journeys.map((journey) => {}) */}{" "}
+        <div className="journeys w-full h-auto">
+          {user.journeys.map((journey) => (
+            <div className="test flex flex-col items-center bg-primary-color w-full p-4 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
+              <div className="dateRow w-full flex flex-row justify-between items-center text-white font-bold text-xl">
+                <p>
+                  {journey.startDate} - {journey.endDate}
+                </p>
+                <p>2023</p>
+              </div>
+              <div className="placeRow w-full flex flex-row justify-between items-center text-white font-bold text-3xl">
+                <p>{journey.startPlace}</p>
+                <img className="w-10" src={arrowIcon} />
+                <p>{journey.endPlace}</p>
+              </div>
+              <button
+                className="button w-50 h-6 flex items-center duration-500 bg-opacity-50 hover:bg-opacity-100 bg-back-color rounded-full mt-4 mb-1 px-10 py-4 font-bold text-sm"
+                onClick={() => navigate("1")}
+              >
+                WYŚWIETL SZCZEGÓŁY
+              </button>
+            </div>
+          ))}
           <div className="test flex flex-col items-center bg-primary-color w-full p-4 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
             <div className="dateRow w-full flex flex-row justify-between items-center text-white font-bold text-xl">
               <p>26.09 - 28.09</p>
