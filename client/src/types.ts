@@ -15,3 +15,14 @@ export interface TransportDataI {
   text: string;
   icon: string;
 }
+
+export interface journeyDataI {
+  startPlace: string;
+  endPlace: string;
+  startDate: Date;
+  endDate: Date;
+  transportType: string;
+  length: string;
+  items: string[];
+  people: string[];
+}
