@@ -23,18 +23,21 @@ const SignUpPage = () => {
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/v1/users/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        password: password,
-        passwordConfirm: passwordConf,
-      }),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/users/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+          passwordConfirm: passwordConf,
+        }),
+      }
+    );
     const data = await response.json();
     if (data.status == "fail" || data.status == "error") {
       alert(data.message);

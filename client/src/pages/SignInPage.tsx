@@ -17,11 +17,14 @@ const SignInPage = () => {
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/v1/users/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, password: password }),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/users/signin`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, password: password }),
+      }
+    );
     const data = await response.json();
     if (data.status === "fail" || data.status === "error") {
       alert("Login failed");
