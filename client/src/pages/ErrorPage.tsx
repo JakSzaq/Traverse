@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import errorIcon from "../assets/icons/error_icon.svg";
 import logoIcon from "../assets/icons/traverse_icon.svg";

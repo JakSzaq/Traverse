@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import arrowIcon from "../assets/icons/arrow_icon.svg";
 import starIcon from "../assets/icons/star_icon.svg";
 import plusIcon from "../assets/icons/plus_icon.svg";
@@ -8,7 +7,7 @@ import { journeyDataI } from "../types";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
-  const [journeys, setJourneys] = useState<object[]>([{}]);
+  // const [journeys, setJourneys] = useState<object[]>([{}]);
   const user = JSON.parse(localStorage.getItem("user")!);
 
   return (

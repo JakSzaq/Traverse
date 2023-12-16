@@ -1,9 +1,8 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/welcome_logo.svg";
 import bellIcon from "../assets/icons/bell_icon.svg";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {

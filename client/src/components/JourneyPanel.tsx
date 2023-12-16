@@ -1,5 +1,5 @@
 // component and api imports
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import LoadingScreen from "./LoadingScreen";
 import {
   useJsApiLoader,
@@ -30,7 +30,7 @@ Lines commented like this are there until styling and basic functionality is don
 const center = { lat: 52.2291, lng: 21.0129 };
 
 // main component for creating and showing journey with coresponding data
-const JourneyPanel = () => {
+const JourneyPanel: React.FC = () => {
   const [libraries] = useState<Libraries | undefined>(["places"]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -192,7 +192,7 @@ const JourneyPanel = () => {
           {directionsResponse && toggle && (
             <DirectionsRenderer directions={directionsResponse} />
           )}
-          {/* {position !== undefined && duration !== null && (
+          {position !== undefined && duration !== null && (
             <>
               <Marker options={{ icon: icon }} position={position} />
               <div
@@ -240,7 +240,7 @@ const JourneyPanel = () => {
                 </div>
               </div>
             </>
-          )} */}
+          )}
           {
             /* TEST DATA - WILL BE REMOVED AFTER ALL STYLING IS DONE */ true && (
               <>
@@ -342,10 +342,7 @@ const JourneyPanel = () => {
       </div>
       <div className="form bg-transparent w-full h-[90vh]">
         <form
-          onSubmit={
-            (e: React.FormEvent<HTMLFormElement>) =>
-              e.preventDefault() /*handleCreateJourney*/
-          }
+          onSubmit={handleCreateJourney}
           className="w-full h-full grid grid-cols-2 grid-rows-[1fr_1fr_1fr_2fr_0.5fr] overflow-y-scroll gap-y-4 gap-x-10"
         >
           <div className="places w-full bg-white rounded-3xl col-span-2 py-4 px-6 relative">
@@ -509,7 +506,7 @@ const JourneyPanel = () => {
                           src={removeIcon}
                           onClick={() =>
                             setItemsArray(
-                              itemsArray.filter((o, i) => idx !== i)
+                              itemsArray.filter((_o, i) => idx !== i)
                             )
                           }
                         />
@@ -570,7 +567,7 @@ const JourneyPanel = () => {
                           src={removeIcon}
                           onClick={() =>
                             setPeopleArray(
-                              peopleArray.filter((o, i) => idx !== i)
+                              peopleArray.filter((_o, i) => idx !== i)
                             )
                           }
                         />
