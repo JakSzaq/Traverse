@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://traverse-jn61.onrender.com'],
     credentials: true,
     optionsSuccessStatus: 200,
   })
