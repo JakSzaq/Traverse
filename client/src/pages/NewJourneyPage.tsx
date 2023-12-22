@@ -2,6 +2,19 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import QuizForm from "../components/QuizForm";
 import JourneyPanel from "../components/JourneyPanel";
+import { journeyDataI } from "../types";
+
+const defaultProps: journeyDataI = {
+  startPlace: "",
+  endPlace: "",
+  startDate: new Date(),
+  endDate: "",
+  transportType: "DRIVING",
+  length: "",
+  items: [],
+  people: [],
+  _id: "",
+};
 
 const NewJourneyPage = () => {
   const [quizData, setQuizData] = useState<any>([0, 0, 0, 0]);
@@ -27,7 +40,7 @@ const NewJourneyPage = () => {
   return (
     <div className="content w-full h-screen relative bg-back-color z-0 flex flex-col flex-wrap justify-center items-center">
       <Navbar />
-      {result == "A" && <JourneyPanel />}
+      {result == "A" && <JourneyPanel {...defaultProps} />}
       {!isFinished && <QuizForm picks={quizData} setPicks={setQuizData} />}
     </div>
   );

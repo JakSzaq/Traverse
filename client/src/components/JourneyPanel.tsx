@@ -422,7 +422,8 @@ const JourneyPanel: React.FC<journeyDataI> = (props) => {
                     id="startDate"
                     name="startDate"
                     placeholder=""
-                    value={props.startDate!.toISOString().substring(0, 10)}
+                    value={journey.startDate.toString()}
+                    onChange={handleJourneyChange}
                     className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                   />
                 </label>
@@ -436,10 +437,11 @@ const JourneyPanel: React.FC<journeyDataI> = (props) => {
                     id="endDate"
                     name="endDate"
                     placeholder=""
+                    onChange={handleJourneyChange}
                     value={
-                      props.endDate == undefined
+                      journey.endDate == undefined
                         ? undefined
-                        : props.endDate.toISOString().substring(0, 10)
+                        : journey.endDate.toString()
                     }
                     className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                   />
@@ -639,6 +641,7 @@ JourneyPanel.defaultProps = {
   length: "",
   items: [],
   people: [],
+  _id: "",
 };
 
 export default JourneyPanel;

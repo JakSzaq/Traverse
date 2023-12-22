@@ -20,7 +20,7 @@ export interface journeyDataI {
   startPlace: string;
   endPlace: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date | string;
   transportType: "DRIVING" | "BICYCLING" | "WALKING" | "FLYING";
   length: string;
   items: string[];
