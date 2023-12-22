@@ -22,6 +22,7 @@ import clockIcon from "../assets/icons/clock_icon.svg";
 import plusIcon from "../assets/icons/plus_icon.svg";
 import removeIcon from "../assets/icons/remove_icon.svg";
 import { transportData } from "../data/transportData";
+import { journeyDataI } from "../types";
 
 /* 
 Lines commented like this are there until styling and basic functionality is done
@@ -30,7 +31,7 @@ Lines commented like this are there until styling and basic functionality is don
 const center = { lat: 52.2291, lng: 21.0129 };
 
 // main component for creating and showing journey with coresponding data
-const JourneyPanel: React.FC = () => {
+const JourneyPanel: React.FC<journeyDataI> = (props) => {
   const [libraries] = useState<Libraries | undefined>(["places"]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -51,10 +52,19 @@ const JourneyPanel: React.FC = () => {
   const [journeyType, setJourneyType] = useState("");
   const [direction, setDirection] = useState(false);
 
+  const [journey, setJourney] = useState<journeyDataI>({
+    startPlace: props.startPlace,
+    endPlace: props.endPlace,
+    startDate: props.startDate,
+    endDate: props.endDate,
+    transportType: props.transportType,
+    length: props.length,
+    items: props.items,
+    people: props.people,
+    _id: props._id,
+  });
   const [item, setItem] = useState("");
   const [person, setPerson] = useState("");
-  const [itemsArray, setItemsArray] = useState<string[]>([]);
-  const [peopleArray, setPeopleArray] = useState<string[]>([]);
 
   const originRef = useRef<HTMLInputElement>(null);
   const destinationRef = useRef<HTMLInputElement>(null);
@@ -162,6 +172,14 @@ const JourneyPanel: React.FC = () => {
     //   map?.setZoom(14);
     // }
     setToggle(!toggle);
+  };
+
+  const handleJourneyChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    setJourney({
+      ...journey,
+      [name]: value,
+    });
   };
 
   return (
@@ -358,9 +376,11 @@ const JourneyPanel: React.FC = () => {
                   <Autocomplete>
                     <input
                       type="text"
-                      id="origin"
-                      name="origin"
+                      id="startPlace"
+                      name="startPlace"
                       placeholder="..."
+                      value={journey.startPlace}
+                      onChange={handleJourneyChange}
                       className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                       ref={originRef}
                     />
@@ -374,9 +394,11 @@ const JourneyPanel: React.FC = () => {
                   <Autocomplete>
                     <input
                       type="text"
-                      id="destination"
-                      name="destination"
+                      id="endPlace"
+                      name="endPlace"
                       placeholder="..."
+                      value={journey.endPlace}
+                      onChange={handleJourneyChange}
                       className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                       ref={destinationRef}
                     />
@@ -397,9 +419,10 @@ const JourneyPanel: React.FC = () => {
                   <img src={startIcon} className="w-7 mr-4" />
                   <input
                     type="date"
-                    id="origin"
-                    name="origin"
+                    id="startDate"
+                    name="startDate"
                     placeholder=""
+                    value={props.startDate!.toISOString().substring(0, 10)}
                     className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                   />
                 </label>
@@ -410,9 +433,14 @@ const JourneyPanel: React.FC = () => {
                   <img src={endIcon} className="w-7 mr-4" />
                   <input
                     type="date"
-                    id="destination"
-                    name="destination"
+                    id="endDate"
+                    name="endDate"
                     placeholder=""
+                    value={
+                      props.endDate == undefined
+                        ? undefined
+                        : props.endDate.toISOString().substring(0, 10)
+                    }
                     className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                   />
                 </label>
@@ -431,17 +459,13 @@ const JourneyPanel: React.FC = () => {
                     className={` bg-back-color flex ${
                       direction ? "flex-[1_0_20%]" : "flex-[1_0_32%]"
                     } flex-col justify-center items-center rounded-3xl duration-300 text-sm p-2 gap-1.5 font-bold drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] cursor-pointer border-2 ${
-                      journeyMode == mode.name
+                      journey.transportType == mode.name
                         ? "border-primary-color"
                         : "border-transparent"
                     }`}
                     key={mode.name}
                     onClick={() => {
-                      if (journeyMode == mode.name) {
-                        setJourneyMode("");
-                      } else {
-                        setJourneyMode(mode.name);
-                      }
+                      setJourney({ ...journey, transportType: mode.name });
                     }}
                   >
                     <h4>PODRÓŻ</h4>
@@ -482,7 +506,11 @@ const JourneyPanel: React.FC = () => {
                     src={plusIcon}
                     className="w-7 cursor-pointer"
                     onClick={() => (
-                      item != "" && setItemsArray((prev) => [...prev, item]),
+                      item != "" &&
+                        setJourney({
+                          ...journey,
+                          items: [...journey.items, item],
+                        }),
                       setItem("")
                     )}
                   />
@@ -491,12 +519,12 @@ const JourneyPanel: React.FC = () => {
               <div className="items h-auto w-full bg-back-color border-t-[3px] border-primary-color gap-5 p-2">
                 <div className="header flex flex-row justify-between pb-2 font-bold text-lg">
                   <h2>Łącznie</h2>
-                  <h2>{itemsArray.length}</h2>
+                  <h2>{journey.items.length}</h2>
                 </div>
                 <hr className="bg-black h-[2px] -mt-1 mb-2 border-0"></hr>
                 <div className="itemList max-h-32 overflow-y-scroll overflow-x-hidden flex flex-col items-center justify-between">
-                  {itemsArray.length > 0 ? (
-                    itemsArray.map((item, idx) => (
+                  {journey.items.length > 0 ? (
+                    journey.items.map((item, idx) => (
                       <div className="item w-full flex justify-between items-center py-1 pl-4 pr-3 bg-white m-[2px] rounded-lg mr-4">
                         <h2 className="h-6 font-bold text-primary-color">
                           {item}
@@ -505,9 +533,10 @@ const JourneyPanel: React.FC = () => {
                           className="w-4 cursor-pointer duration-150 hover:scale-[125%]"
                           src={removeIcon}
                           onClick={() =>
-                            setItemsArray(
-                              itemsArray.filter((_o, i) => idx !== i)
-                            )
+                            setJourney({
+                              ...journey,
+                              items: journey.items.filter((_o, i) => idx !== i),
+                            })
                           }
                         />
                       </div>
@@ -543,7 +572,10 @@ const JourneyPanel: React.FC = () => {
                     className="w-7 cursor-pointer"
                     onClick={() => (
                       person != "" &&
-                        setPeopleArray((prev) => [...prev, person]),
+                        setJourney({
+                          ...journey,
+                          people: [...journey.people, person],
+                        }),
                       setPerson("")
                     )}
                   />
@@ -552,12 +584,12 @@ const JourneyPanel: React.FC = () => {
               <div className="items h-auto w-full bg-back-color border-t-[3px] border-primary-color gap-5 p-2">
                 <div className="header flex flex-row justify-between pb-2 font-bold text-lg">
                   <h2>Łącznie</h2>
-                  <h2>{peopleArray.length}</h2>
+                  <h2>{journey.people.length}</h2>
                 </div>
                 <hr className="bg-black h-[2px] -mt-1 mb-2 border-0"></hr>
                 <div className="itemList max-h-32 overflow-y-scroll overflow-x-hidden flex flex-col items-center justify-between">
-                  {peopleArray.length > 0 ? (
-                    peopleArray.map((person, idx) => (
+                  {journey.people.length > 0 ? (
+                    journey.people.map((person, idx) => (
                       <div className="item w-full flex justify-between items-center py-1 pl-4 pr-3 bg-white m-[2px] rounded-lg mr-4">
                         <h2 className="h-6 font-bold text-primary-color">
                           {person}
@@ -566,9 +598,12 @@ const JourneyPanel: React.FC = () => {
                           className="w-4 cursor-pointer duration-150 hover:scale-[125%]"
                           src={removeIcon}
                           onClick={() =>
-                            setPeopleArray(
-                              peopleArray.filter((_o, i) => idx !== i)
-                            )
+                            setJourney({
+                              ...journey,
+                              people: journey.people.filter(
+                                (_o, i) => idx !== i
+                              ),
+                            })
                           }
                         />
                       </div>
@@ -580,16 +615,30 @@ const JourneyPanel: React.FC = () => {
               </div>
             </div>
           </div>
-          <button
-            type="submit"
-            className="submit col-span-2 h-24 font-bold text-5xl bg-primary-color rounded-3xl flex justify-center items-center gap-5 text-white"
-          >
-            WYZNACZ TRASĘ <img src={logoIcon} className="w-8 fill-white" />
-          </button>
+          <div className="btn-container cursor-pointer col-span-2 h-24 bg-primary-color rounded-3xl flex justify-center items-center relative overflow-hidden before:content-[''] before:absolute before:bg-[rgba(255,255,255,.5)] before:duration-1000 before:skew-x-[-45deg] before:hover:skew-x-[-45deg] before:-left-56 before:hover:left-[110%] before:w-44 before:h-44">
+            <button
+              onClick={() => console.log(journey)}
+              type="submit"
+              className="submit col-span-2 w-full font-bold text-5xl bg-transparent rounded-3xl flex justify-center items-center gap-5 text-white"
+            >
+              WYZNACZ TRASĘ <img src={logoIcon} className="w-8 fill-white" />
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
+};
+
+JourneyPanel.defaultProps = {
+  startPlace: "",
+  endPlace: "",
+  startDate: new Date(),
+  endDate: undefined,
+  transportType: "DRIVING",
+  length: "",
+  items: [],
+  people: [],
 };
 
 export default JourneyPanel;

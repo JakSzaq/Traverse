@@ -14,7 +14,7 @@ function App() {
   const token = localStorage.getItem("token");
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
           <Route
