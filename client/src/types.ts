@@ -11,7 +11,7 @@ export interface QuizFormI extends QuizDataI {
 }
 
 export interface TransportDataI {
-  name: string;
+  name: "DRIVING" | "BICYCLING" | "WALKING" | "FLYING";
   text: string;
   icon: string;
 }
@@ -21,8 +21,20 @@ export interface journeyDataI {
   endPlace: string;
   startDate: Date;
   endDate: Date;
-  transportType: string;
+  transportType: "DRIVING" | "BICYCLING" | "WALKING" | "FLYING";
   length: string;
   items: string[];
   people: string[];
+  _id: string;
+}
+
+export type userT = {
+  email: string;
+  id: string;
+  journeys: journeyDataI[];
+  name: string;
+};
+
+export interface userI {
+  user: userT;
 }
