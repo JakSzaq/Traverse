@@ -72,6 +72,7 @@ const SignUpPage = () => {
           name="password"
           type="password"
           placeholder="password"
+          autoComplete="on"
           value={password}
           onChange={handleChange}
         />
@@ -79,6 +80,7 @@ const SignUpPage = () => {
           name="passwordConf"
           type="password"
           placeholder="powtórz hasło"
+          autoComplete="off"
           value={passwordConf}
           onChange={handleChange}
         />

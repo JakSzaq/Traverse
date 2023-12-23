@@ -16,6 +16,10 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
@@ -31,10 +35,6 @@ app.use(
 
 // ROUTES
 app.use('/api/v1/users', userRouter);
-
-app.get('*', function (req, res) {
-  res.send('public/index.html');
-});
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

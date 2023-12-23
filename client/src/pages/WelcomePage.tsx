@@ -38,6 +38,7 @@ const WelcomePage: React.FC = () => {
   return (
     <AnimatePresence>
       <motion.div
+        key={1}
         className="curtain w-full h-full absolute z-30 bg-back-color top-0 transform translate-y-[-100vh]"
         animate={clicked ? "slide" : "initial"}
         variants={{
@@ -49,7 +50,10 @@ const WelcomePage: React.FC = () => {
           duration: 1,
         }}
       ></motion.div>
-      <div className="content w-full h-screen relative overflow-hidden bg-back-color z-0 flex flex-col flex-wrap justify-center items-center">
+      <div
+        key={2}
+        className="content w-full h-screen relative overflow-hidden bg-back-color z-0 flex flex-col flex-wrap justify-center items-center"
+      >
         <div className="overlay w-[150%] h-screen absolute top-0 bg-gradient-to-bl from-back-color from-[30%] to-gradient-color to-100% -z-10 origin-center"></div>
         <motion.img
           className="back_layer w-full h-screen absolute top-0 object-cover -z-20 transition ease-in-out duration-1000 transform skew-x-[-5deg] skew-y-0 scale-125"

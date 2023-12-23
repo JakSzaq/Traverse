@@ -47,6 +47,7 @@ const SignInPage = () => {
           name="email"
           type="email"
           placeholder="email"
+          autoComplete="on"
           value={email}
           onChange={handleChange}
         />
@@ -54,6 +55,7 @@ const SignInPage = () => {
           name="password"
           type="password"
           placeholder="password"
+          autoComplete="on"
           value={password}
           onChange={handleChange}
         />

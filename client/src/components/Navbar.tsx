@@ -8,6 +8,7 @@ const Navbar: React.FC = () => {
   const handleSignOut = () => {
     navigate("/");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     window.location.reload();
   };
   return (
