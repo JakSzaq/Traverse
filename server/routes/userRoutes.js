@@ -1,11 +1,14 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const fuelPriceController = require('../controllers/fuelPriceController');
 
 const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/signin', authController.signin);
+
+router.post('/getFuelPrices', fuelPriceController.getPrices);
 
 router
   .route('/')

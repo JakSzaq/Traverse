@@ -1,12 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const schedule = require('node-schedule');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
+const fuelPriceController = require('./controllers/fuelPriceController');
 
 const app = express();
+
+const job = schedule.scheduleJob('0 12 * * *', function () {
+  fuelPriceController.updatePrices();
+});
 
 // MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
