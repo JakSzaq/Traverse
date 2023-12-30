@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path');
 const schedule = require('node-schedule');
 
 const AppError = require('./utils/appError');
