@@ -11,7 +11,7 @@ const fuelPriceController = require('./controllers/fuelPriceController');
 
 const app = express();
 
-const job = schedule.scheduleJob('0 12 * * *', function () {
+const job = schedule.scheduleJob('29,30 15 * * *', function () {
   fuelPriceController.updatePrices();
 });
 
