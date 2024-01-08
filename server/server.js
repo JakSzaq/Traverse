@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const updateData = require('./updateData');
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! Shutting down...');
@@ -17,6 +18,7 @@ const DB = process.env.DATABASE.replace(
 
 mongoose.connect(DB).then(() => {
   console.log('DB connection successfull!');
+  updateData.tryFetch();
 });
 
 const port = process.env.PORT || 3000;
