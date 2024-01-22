@@ -8,7 +8,10 @@ const router = express.Router();
 router.post('/signup', authController.signup);
 router.post('/signin', authController.signin);
 
-router.post('/getFuelPrices', fuelPriceController.getPrices);
+router
+  .route('/fuelPrices')
+  .post(fuelPriceController.getPrices)
+  .patch(fuelPriceController.updatePrices);
 
 router
   .route('/')

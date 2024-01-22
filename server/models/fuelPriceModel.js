@@ -8,6 +8,7 @@ const fuelPriceSchema = new mongoose.Schema({
   LPG: String,
   EV: String,
   currency: String,
+  updatedAt: Date,
 });
 
 const FuelPrice = mongoose.model('FuelPrice', fuelPriceSchema);
