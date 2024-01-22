@@ -3,12 +3,12 @@ import plusIcon from "../assets/icons/plus_icon.svg";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import JourneyList from "../components/JourneyList";
-import { userT } from "../types";
+import { UserT } from "../types";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   // const [journeys, setJourneys] = useState<object[]>([{}]);
-  const user: userT = JSON.parse(localStorage.getItem("user")!);
+  const user: UserT = JSON.parse(localStorage.getItem("user")!);
 
   return (
     <div className="content w-full h-screen relative bg-back-color z-0 flex flex-col flex-wrap justify-center items-center">

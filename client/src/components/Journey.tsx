@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { journeyDataI } from "../types";
+import { JourneyDataI } from "../types";
 import arrowIcon from "../assets/icons/arrow_icon.svg";
 import starIcon from "../assets/icons/star_icon.svg";
 import trashIcon from "../assets/icons/remove_icon.svg";
 import { useNavigate } from "react-router-dom";
 
-const Journey: React.FC<{ data: journeyDataI; id: string }> = ({
+const Journey: React.FC<{ data: JourneyDataI; id: string }> = ({
   data,
   id,
 }) => {

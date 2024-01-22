@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import LoadingScreen from "./components/LoadingScreen";
-import NewJourneyPage from "./pages/NewJourneyPage";
-import JourneyPage from "./pages/JourneyPage";
 import ErrorPage from "./pages/ErrorPage";
 
 const WelcomePage = lazy(() => import("./pages/WelcomePage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const NewJourneyPage = lazy(() => import("./pages/NewJourneyPage"));
+const JourneyPage = lazy(() => import("./pages/JourneyPage"));
 
 function App() {
   const token = localStorage.getItem("token");
@@ -20,7 +20,7 @@ function App() {
           <Route
             path="/"
             element={
-              token == undefined && token == null ? (
+              token === undefined || token === null ? (
                 <WelcomePage />
               ) : (
                 <Navigate to="/dashboard" replace />
@@ -30,7 +30,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              token == undefined && token == null ? (
+              token === undefined || token === null ? (
                 <SignUpPage />
               ) : (
                 <Navigate to="/dashboard" replace />
@@ -40,7 +40,7 @@ function App() {
           <Route
             path="/signin"
             element={
-              token == undefined && token == null ? (
+              token === undefined || token === null ? (
                 <SignInPage />
               ) : (
                 <Navigate to="/dashboard" replace />

@@ -33,10 +33,10 @@ const SignInPage = () => {
     alert("Login successful");
     setEmail("");
     setPassword("");
-    navigate("/dashboard");
-    window.location.reload();
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
+    window.location.reload();
+    navigate("/dashboard");
   };
 
   return (

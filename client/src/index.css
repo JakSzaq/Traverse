@@ -23,19 +23,48 @@
   font-variant-numeric: lining-nums;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #beffc9 inset !important;
+}
+
 *::-webkit-scrollbar {
   width: 0px;
 }
 
-.itemList::-webkit-scrollbar {
+.itemList::-webkit-scrollbar,
+.peopleList::-webkit-scrollbar,
+.items-list::-webkit-scrollbar,
+.people-list::-webkit-scrollbar {
   width: 5px;
 }
 
-.itemList::-webkit-scrollbar-track {
+.itemList::-webkit-scrollbar-track,
+.peopleList::-webkit-scrollbar-track {
   background: #22cc3d;
 }
 
 .itemList::-webkit-scrollbar-thumb,
-.itemList::-webkit-scrollbar-thumb:hover {
+.peopleList::-webkit-scrollbar-thumb,
+.itemList::-webkit-scrollbar-thumb:hover,
+.peopleList::-webkit-scrollbar-thumb:hover {
   background: black;
+}
+
+.items-list::-webkit-scrollbar-track,
+.people-list::-webkit-scrollbar-track {
+  background: white;
+}
+
+.items-list::-webkit-scrollbar-thumb,
+.people-list::-webkit-scrollbar-thumb,
+.items-list::-webkit-scrollbar-thumb:hover,
+.people-list::-webkit-scrollbar-thumb:hover {
+  background: rgb(156 163 175);
+}
+
+hr {
+  border: none;
 }
