@@ -1,14 +1,57 @@
+import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useEffect, useState } from "react";
+import JourneyPanel from "../components/JourneyPanel";
+import LoadingScreen from "../components/LoadingScreen";
+import { JourneyPropsI, UserT } from "../types";
 
 const JourneyPage = () => {
+  const { id } = useParams();
+  const user: UserT = JSON.parse(localStorage.getItem("user")!);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [journey, setJourney] = useState<JourneyPropsI>();
+
+  useEffect(() => {
+    const getJourney = async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/journeys/${
+          user.id
+        }/${id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const result = await response.json();
+      if (result.status === "fail" || result.status === "error") {
+        alert("Something went wrong!");
+        return;
+      }
+      setJourney({
+        ...result.data.journey,
+        startDate: new Date(result.data.journey.startDate)
+          .toISOString()
+          .substring(0, 10),
+        endDate: new Date(result.data.journey.endDate)
+          .toISOString()
+          .substring(0, 10),
+      });
+    };
+    getJourney();
+  }, [id]);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, [journey]);
+
+  if (!isLoaded) {
+    return <LoadingScreen />;
+  }
+
   return (
-    <div>
+    <div className="page-content w-full h-screen relative bg-back-color z-0 flex flex-col flex-wrap justify-center items-center">
       <Navbar />
-      <div className=" h-screen w-full bg-back-color flex flex-col justify-center items-center">
-        <h2 className="text-4xl font-bold mt-10 -skew-y-6">
-          CURRENTLY UNDER DEVELOPMENT
-        </h2>
-      </div>
+      {journey !== undefined && <JourneyPanel {...journey} mode="VIEW" />}
     </div>
   );
 };

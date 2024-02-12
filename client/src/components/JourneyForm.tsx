@@ -16,67 +16,49 @@ import arrowDownIcon from "../assets/icons/arrow_down_icon.svg";
 
 // data and type imports
 import { JourneyFormI, FuelPricesI, FuelT } from "../types";
+import { fuelData } from "../data/fuelData";
 
 const JourneyForm: React.FC<JourneyFormI> = ({
   journey,
   setJourney,
   originRef,
   destinationRef,
-  setFuelPrice,
   transportData,
   createJourney,
+  fuelPrices,
+  getFuelPrices,
 }) => {
   const [item, setItem] = useState("");
   const [person, setPerson] = useState("");
   const [expanded, setExpanded] = useState(false);
   const [fuelType, setFuelType] = useState<FuelT>();
-  const [fuelPrices, setFuelPrices] = useState<FuelPricesI | undefined>();
   const [isClicked, setIsClicked] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const isVisible = useIsVisible(imageRef);
 
-  const getFuelPrices = async () => {
-    if (fuelPrices !== undefined) {
-      setIsClicked(true);
-      return;
+  useEffect(() => {
+    if (fuelPrices !== undefined && journey.fuel == undefined) {
+      handleClick();
     }
-    const response = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/api/v1/users/fuelPrices`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await response.json();
-    const latest = new Date(data.data.prices[0].updatedAt);
-    const today =
-      new Date().getDate() +
-      "-" +
-      new Date().getMonth() +
-      "-" +
-      new Date().getFullYear();
-    const latestDate =
-      latest.getDate() + "-" + latest.getMonth() + "-" + latest.getFullYear();
-    if (today == latestDate) {
-      setFuelPrices(data.data.prices[0]);
-    } else {
-      await fetchNewPrices();
-    }
-  };
+  }, [fuelPrices]);
 
-  const fetchNewPrices = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/api/v1/users/fuelPrices`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await response.json();
-    setFuelPrices(data.data.prices[0]);
-  };
+  useEffect(() => {
+    if (fuelPrices !== undefined) {
+      Object.keys(fuelPrices).map((key) => {
+        if (key == fuelType?.value) {
+          setJourney({
+            ...journey,
+            fuel: {
+              value: fuelPrices[key as keyof FuelPricesI].toString(),
+              usage: fuelType.usage,
+            },
+          });
+        }
+      });
+    }
+  }, [fuelType]);
 
   const handleJourneyChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -86,35 +68,36 @@ const JourneyForm: React.FC<JourneyFormI> = ({
     });
   };
 
-  useEffect(() => {
-    if (fuelPrices !== undefined) {
-      handleClick();
-    }
-  }, [fuelPrices]);
-
-  useEffect(() => {
-    if (fuelPrices !== undefined) {
-      Object.keys(fuelPrices).map((key) => {
-        if (key == fuelType?.value) {
-          setFuelPrice({
-            value: fuelPrices[key as keyof FuelPricesI].toString(),
-            usage: fuelType.usage,
-          });
-        }
-      });
-    }
-  }, [fuelType]);
-
   const handleClick = () => {
-    if (journey.transportType == "DRIVING") {
-      setIsClicked(true);
-    }
+    setIsClicked(true);
   };
 
   const resetFuelData = () => {
     setFuelType(undefined);
-    setFuelPrice(undefined);
+    setJourney({
+      ...journey,
+      fuel: {
+        value: "",
+        usage: 0,
+      },
+    });
   };
+
+  useEffect(() => {
+    journey.transportType !== "DRIVING" && resetFuelData();
+    journey.transportType == "DRIVING" && getFuelPrices();
+  }, [journey.transportType]);
+
+  useEffect(() => {
+    if (fuelType == undefined && journey.fuel !== undefined) {
+      const fuel = fuelData.find((fuel) => fuel.usage === journey.fuel?.usage);
+      if (fuel == undefined) return;
+      setFuelType({
+        value: fuel!.alias,
+        usage: fuel!.usage,
+      });
+    }
+  }, [fuelType]);
 
   return (
     <div className="form bg-transparent w-full h-[90vh]">
@@ -151,6 +134,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     defaultValue={journey.startPlace}
                     className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                     ref={originRef}
+                    required
                   />
                 </Autocomplete>
               </label>
@@ -168,6 +152,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     defaultValue={journey.endPlace}
                     className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                     ref={destinationRef}
+                    required
                   />
                 </Autocomplete>
               </label>
@@ -192,6 +177,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                   value={journey.startDate?.toString()}
                   onChange={handleJourneyChange}
                   className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                  required
                 />
               </label>
             </div>
@@ -210,6 +196,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                       ? undefined
                       : journey.endDate.toString()
                   }
+                  required
                   className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                 />
               </label>
@@ -227,7 +214,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                 <div
                   className={` bg-back-color flex ${
                     expanded ? "flex-[1_0_20%]" : "flex-[1_0_32%]"
-                  } flex-col justify-center items-center rounded-3xl duration-300 text-sm px-2 py-[.25rem] gap-1.5 font-bold drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] cursor-pointer border-2 ${
+                  } relative overflow-hidden flex-col justify-center items-center rounded-3xl duration-300 text-sm px-2 py-[.25rem] gap-1.5 font-bold drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] cursor-pointer border-2 ${
                     journey.transportType == mode.name
                       ? "border-primary-color"
                       : "border-transparent"
@@ -235,13 +222,26 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                   key={mode.name}
                   onClick={() => {
                     setJourney({ ...journey, transportType: mode.name });
-                    mode.name !== "DRIVING" && resetFuelData();
-                    mode.name == "DRIVING" && getFuelPrices();
+                    mode.name == "DRIVING" && handleClick();
                   }}
                 >
                   <h4>PODRÓŻ</h4>
                   <img src={mode.icon} />
                   <h4>{mode.text}</h4>
+                  <AnimatePresence>
+                    {mode.name == "DRIVING" && fuelType !== undefined ? (
+                      <>
+                        <motion.h2
+                          initial={{ x: 100 }}
+                          animate={{ x: 0 }}
+                          exit={{ x: 100 }}
+                          className="absolute w-20 h-full py-1 rounded-l-full duration-100 -right-2 flex flex-wrap text-center justify-center  items-center border-2 border-primary-color  "
+                        >
+                          {fuelType.value}
+                        </motion.h2>
+                      </>
+                    ) : undefined}
+                  </AnimatePresence>
                 </div>
               ))}
             </div>

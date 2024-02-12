@@ -149,7 +149,7 @@ const SignUpPage = () => {
               className="link text-primary-color cursor-pointer hover:underline underline-offset-4"
               onClick={() => navigate("/signin")}
             >
-              Zarejestruj się
+              Zaloguj się
             </a>
           </p>
           <div className="w-full h-[0.125rem] bg-gray-400 flex justify-center items-center">

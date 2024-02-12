@@ -10,7 +10,7 @@ router.post('/signin', authController.signin);
 
 router
   .route('/fuelPrices')
-  .post(fuelPriceController.getPrices)
+  .get(fuelPriceController.getPrices)
   .patch(fuelPriceController.updatePrices);
 
 router
@@ -28,5 +28,16 @@ router
   .route('/journeys/:id')
   .get(userController.getUserJourneys)
   .patch(userController.createUserJourney);
+
+router
+  .route('/journeys/:id/:journeyId')
+  .get(userController.getUserJourney)
+  .delete(userController.deleteUserJourney)
+  .patch(userController.updateUserJourney);
+
+router
+  .route('/favourites/:id')
+  .get(userController.getUserFavourites)
+  .patch(userController.toggleFavourites);
 
 module.exports = router;

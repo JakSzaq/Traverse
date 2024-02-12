@@ -25,6 +25,18 @@ const journeySchema = new mongoose.Schema({
   journeyType: String,
   items: Array,
   people: Array,
+  fuel: {
+    value: {
+      type: String,
+      default: '',
+    },
+    usage: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
-module.exports = journeySchema;
+const Journey = mongoose.model('Journey', journeySchema);
+
+module.exports = Journey;

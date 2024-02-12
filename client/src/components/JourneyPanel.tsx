@@ -1,20 +1,25 @@
 // component and api imports
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LoadingScreen from "./LoadingScreen";
 import { useJsApiLoader, Libraries } from "@react-google-maps/api";
 import JourneyForm from "./JourneyForm";
 
 // data and type imports
 import { transportData } from "../data/transportData";
-import { FuelT, JourneyPropsI, TransportType } from "../types";
+import {
+  FuelPricesI,
+  JourneyMode,
+  JourneyPanelI,
+  JourneyPropsI,
+  TransportType,
+  UserT,
+} from "../types";
 import JourneyMap from "./JourneyMap";
-
-/* 
-Lines commented like this are there until styling and basic functionality is done
-*/
+import JourneyPlaces from "./JourneyPlaces";
+import { useNavigate } from "react-router-dom";
 
 // main component for creating and showing journey with coresponding data
-const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
+const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
   const [libraries] = useState<Libraries | undefined>(["places"]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -29,10 +34,18 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
   const [position, setPosition] = useState<
     google.maps.LatLng | google.maps.LatLngLiteral
   >();
+  const [startPosition, setStartPosition] = useState<
+    google.maps.LatLng | google.maps.LatLngLiteral
+  >();
   const [journeyType, setJourneyType] = useState("");
+  const [mode, setMode] = useState<JourneyMode>(props.mode);
+  const [currentMode, setCurrentMode] = useState<JourneyMode>();
 
-  const [fuel, setFuel] = useState<FuelT>();
+  const [fuelPrices, setFuelPrices] = useState<FuelPricesI | undefined>();
   const [cost, setCost] = useState<string>("");
+  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+  const [data, setData] = useState<JourneyPropsI>();
+
   const [journey, setJourney] = useState<JourneyPropsI>({
     startPlace: props.startPlace,
     endPlace: props.endPlace,
@@ -42,15 +55,13 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
     length: props.length,
     items: props.items,
     people: props.people,
+    fuel: props.fuel,
     _id: props._id,
   });
 
   const originRef = useRef<HTMLInputElement>(null);
   const destinationRef = useRef<HTMLInputElement>(null);
-
-  if (!isLoaded) {
-    return <LoadingScreen />;
-  }
+  const navigate = useNavigate();
 
   // function that calculates coordinates of chosen places and fetches necessary data from the api
   const calculateRoute = async () => {
@@ -88,6 +99,7 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
             const country = results![0].formatted_address.split(" ");
             getJourneyType(country[country.length - 1]);
             map?.panTo(latlong);
+            map?.setZoom(14);
           }
         }
       );
@@ -95,8 +107,8 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
       const calculateCost = (length: number) => {
         return (
           (length / 100) *
-          fuel!.usage *
-          parseFloat(fuel!.value.replace(",", "."))
+          journey.fuel!.usage *
+          parseFloat(journey.fuel!.value.replace(",", "."))
         )
           .toFixed(2)
           .toString();
@@ -134,14 +146,16 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
           function (response, status) {
             if (status == "OK") {
               const journeyLength = response!.routes[0].legs[0].distance!.text;
+              if (journeyLength == undefined) return;
               const journeyLengthNumeric = getNumericValue(journeyLength);
-              console.log(journeyLengthNumeric);
               const journeyDuration =
                 response!.routes[0].legs[0].duration!.text;
               setDirectionsResponse(response);
               setJourney({
                 ...journey,
                 length: journeyLength,
+                startPlace: originRef.current?.value,
+                endPlace: destinationRef.current?.value,
               });
               if (transportT == TransportType.DRIVING) {
                 setCost(calculateCost(journeyLengthNumeric));
@@ -161,16 +175,110 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
     }
   };
 
+  const calculateExistingRoute = async () => {
+    // calculating the route between places
+    if (journey.startPlace === "" || journey.endPlace === "") {
+      return;
+    }
+    const destinationGeocoder = new google.maps.Geocoder();
+    const endPlace = journey.endPlace;
+    destinationGeocoder.geocode(
+      {
+        address: endPlace,
+      },
+      function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          const lat = results![0].geometry.location.lat();
+          const long = results![0].geometry.location.lng();
+          const latlng = new google.maps.LatLng(lat, long);
+          setPosition(latlng);
+          const country = results![0].formatted_address.split(" ");
+          getJourneyType(country[country.length - 1]);
+          map?.panTo(latlng);
+          map?.setZoom(14);
+        }
+      }
+    );
+
+    const calculateCost = (length: number) => {
+      return (
+        (length / 100) *
+        journey.fuel!.usage *
+        parseFloat(journey.fuel!.value.replace(",", "."))
+      )
+        .toFixed(2)
+        .toString();
+    };
+
+    const getNumericValue = (journeyLength: string) => {
+      const length = journeyLength.replace(/\s/g, "-").split("-");
+      if (length.length <= 2) {
+        return parseFloat(length[0]);
+      } else {
+        return parseFloat(length[0] + length[1]);
+      }
+    };
+
+    const checkTransportType = () => {
+      if (
+        journey.transportType !== undefined &&
+        journey.transportType !== "FLYING"
+      ) {
+        return journey.transportType;
+      }
+    };
+
+    const transportT = checkTransportType();
+
+    //calculating distance and time of journey
+    const directionsService = new google.maps.DirectionsService();
+    try {
+      await directionsService.route(
+        {
+          origin: journey.startPlace!,
+          destination: journey.endPlace!,
+          travelMode: google.maps.TravelMode[transportT!],
+        },
+        function (response, status) {
+          if (status == "OK") {
+            const journeyLength = response!.routes[0].legs[0].distance!.text;
+            if (journeyLength == undefined) return;
+            const journeyLengthNumeric = getNumericValue(journeyLength);
+            const journeyDuration = response!.routes[0].legs[0].duration!.text;
+            setDirectionsResponse(response);
+            setJourney({
+              ...journey,
+              length: journeyLength,
+            });
+            if (transportT == TransportType.DRIVING) {
+              setCost(calculateCost(journeyLengthNumeric));
+            }
+            setDuration(journeyDuration);
+          }
+        }
+      );
+    } catch (error) {
+      setDirectionsResponse(null);
+      setJourney({
+        ...journey,
+        length: undefined,
+      });
+      setDuration(null);
+    }
+  };
+
   // function which determines whether a journey is domestic or international
   const getJourneyType = (endCountry: string) => {
     const originGeocoder = new google.maps.Geocoder();
-    const startPlace = originRef.current!.value;
+    const startPlace =
+      mode == "VIEW" ? journey.startPlace : originRef.current!.value;
     originGeocoder.geocode(
       {
         address: startPlace,
       },
       function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
+          setStartPosition(results![0].geometry.location);
           const country = results![0].formatted_address.split(" ");
           const startCountry = country[country.length - 1];
           if (startCountry == endCountry) {
@@ -187,13 +295,140 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
   const handleCreateJourney = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     calculateRoute();
-    setJourney({
-      ...journey,
-      startPlace: originRef.current?.value,
-      endPlace: destinationRef.current?.value,
-    });
-    return false;
+    const user: UserT = JSON.parse(localStorage.getItem("user")!);
+    if (mode == "CREATE") {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/journeys/${user.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            startPlace: journey.startPlace,
+            endPlace: journey.endPlace,
+            startDate: journey.startDate,
+            endDate: journey.endDate,
+            transportType: journey.transportType,
+            journeyType: journeyType,
+            items: journey.items,
+            people: journey.people,
+            length: journey.length,
+            fuel: journey.fuel,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (
+        data.status === "fail" ||
+        data.status === "error" ||
+        data == undefined
+      ) {
+        alert("Something went wrong!");
+        return;
+      }
+
+      navigate(`/dashboard/${data.data.journey._id}`);
+    } else if (mode == "EDIT") {
+      console.log(journey);
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/journeys/${user.id}/${
+          journey._id
+        }`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            startPlace: originRef.current?.value,
+            endPlace: destinationRef.current?.value,
+            startDate: journey.startDate,
+            endDate: journey.endDate,
+            transportType: journey.transportType,
+            journeyType: journeyType,
+            items: journey.items,
+            people: journey.people,
+            length: journey.length,
+            fuel: journey.fuel,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (
+        data.status === "fail" ||
+        data.status === "error" ||
+        data == undefined
+      ) {
+        alert("Something went wrong!");
+        return;
+      }
+      setData(data);
+      navigate(`/dashboard/${data.data.journey._id}`);
+    }
   };
+
+  const getFuelPrices = async () => {
+    if (fuelPrices !== undefined) {
+      return;
+    }
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/users/fuelPrices`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    const data = await response.json();
+    const latest = new Date(data.data.prices[0].updatedAt);
+    const today =
+      new Date().getDate() +
+      "-" +
+      new Date().getMonth() +
+      "-" +
+      new Date().getFullYear();
+    const latestDate =
+      latest.getDate() + "-" + latest.getMonth() + "-" + latest.getFullYear();
+    if (today == latestDate) {
+      setFuelPrices(data.data.prices[0]);
+    } else {
+      await fetchNewPrices();
+    }
+  };
+
+  const fetchNewPrices = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/users/fuelPrices`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    const data = await response.json();
+    setFuelPrices(data.data.prices[0]);
+  };
+
+  useEffect(() => {
+    if (mode == "VIEW" && isLoaded) {
+      calculateExistingRoute();
+      getFuelPrices();
+    }
+  }, [mode, isLoaded]);
+
+  useEffect(() => {
+    if (currentMode == "EDIT") {
+      setMode("EDIT");
+      setDirectionsResponse(null);
+    }
+  }, [currentMode]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setJourney(data);
+      setMode("VIEW");
+      setCurrentMode("VIEW");
+    }
+  }, [data]);
+
+  if (!isLoaded) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="content w-full h-screen grid grid-cols-2 gap-12 mt-16 px-6 overflow-hidden">
@@ -203,22 +438,39 @@ const JourneyPanel: React.FC<JourneyPropsI> = (props) => {
         directionsResponse={directionsResponse}
         duration={duration}
         position={position}
+        startPosition={startPosition}
         fuelPrice={cost}
         journeyType={journeyType}
         setMap={setMap}
-        originRef={originRef}
-        destinationRef={destinationRef}
         transportData={transportData}
+        mode={mode}
+        markers={markers}
       />
-      <JourneyForm
-        journey={journey}
-        setJourney={setJourney}
-        originRef={originRef}
-        destinationRef={destinationRef}
-        setFuelPrice={setFuel}
-        transportData={transportData}
-        createJourney={handleCreateJourney}
-      />
+      {mode == "VIEW" && isLoaded && (
+        <JourneyPlaces
+          journey={journey}
+          position={position}
+          map={map}
+          markers={markers}
+          setMarkers={setMarkers}
+          setMode={setCurrentMode}
+        />
+      )}
+      {mode == "CREATE" || mode == "EDIT" ? (
+        <JourneyForm
+          journey={journey}
+          setJourney={setJourney}
+          originRef={originRef}
+          destinationRef={destinationRef}
+          transportData={transportData}
+          createJourney={handleCreateJourney}
+          setMode={setMode}
+          fuelPrices={fuelPrices}
+          getFuelPrices={getFuelPrices}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
@@ -232,6 +484,11 @@ JourneyPanel.defaultProps = {
   length: "",
   items: [],
   people: [],
+  fuel: {
+    value: "",
+    usage: 0,
+  },
+  mode: "CREATE",
   _id: "",
 };
 

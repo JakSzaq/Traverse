@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
-const JourneySchema = require('./journeyModel');
+const Journey = require('./journeyModel');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -35,7 +35,11 @@ const userSchema = new mongoose.Schema({
     },
   },
   journeys: {
-    type: [JourneySchema],
+    type: [Journey.schema],
+    default: [],
+  },
+  favourites: {
+    type: [Journey.schema],
     default: [],
   },
   passwordChangedAt: Date,

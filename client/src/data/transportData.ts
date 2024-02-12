@@ -3,20 +3,21 @@ import bikeIcon from "../assets/icons/bicycle_icon.svg";
 import pedestrianIcon from "../assets/icons/pedestrian_icon.svg";
 import planeIcon from "../assets/icons/plane_icon.svg";
 import { TransportDataI } from "../types";
+import { TransportType } from "../types";
 
 export const transportData: TransportDataI[] = [
   {
-    name: "DRIVING",
+    name: TransportType.DRIVING,
     text: "SAMOCHODEM",
     icon: carIcon,
   },
   {
-    name: "BICYCLING",
+    name: TransportType.BICYCLING,
     text: "ROWEREM",
     icon: bikeIcon,
   },
   {
-    name: "WALKING",
+    name: TransportType.WALKING,
     text: "PIESZO",
     icon: pedestrianIcon,
   },
