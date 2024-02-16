@@ -69,10 +69,17 @@ exports.createUserJourney = catchAsync(async (req, res, next) => {
     }
   );
 
+  const arr2 = journeys;
+  const arr1 = updatedUser.journeys;
+
+  const exclude = (arr1, arr2) => {
+    return arr1.filter((o1) => arr2.map((o2) => o2.foo).indexOf(o1.foo) === -1);
+  };
+
   res.status(200).json({
     status: 'success',
     data: {
-      journey: updatedUser.journeys[journeys.length - 1],
+      journey: exclude(arr2, arr1),
     },
   });
 });

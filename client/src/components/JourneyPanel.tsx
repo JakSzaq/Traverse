@@ -239,8 +239,9 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
           destination: journey.endPlace!,
           travelMode: google.maps.TravelMode[transportT!],
         },
-        function (response, status) {
+        async function (response, status) {
           if (status == "OK") {
+            await getFuelPrices();
             const journeyLength = response!.routes[0].legs[0].distance!.text;
             if (journeyLength == undefined) return;
             const journeyLengthNumeric = getNumericValue(journeyLength);
@@ -385,6 +386,7 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
       new Date().getFullYear();
     const latestDate =
       latest.getDate() + "-" + latest.getMonth() + "-" + latest.getFullYear();
+    console.log(today, latestDate);
     if (today == latestDate) {
       setFuelPrices(data.data.prices[0]);
     } else {
@@ -407,7 +409,6 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
   useEffect(() => {
     if (mode == "VIEW" && isLoaded) {
       calculateExistingRoute();
-      getFuelPrices();
     }
   }, [mode, isLoaded]);
 
@@ -425,6 +426,10 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
       setCurrentMode("VIEW");
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log(fuelPrices);
+  }, [fuelPrices]);
 
   if (!isLoaded) {
     return <LoadingScreen />;

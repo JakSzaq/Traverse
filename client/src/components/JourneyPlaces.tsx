@@ -82,7 +82,6 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
         location: position,
         radius: 5000,
         type: "restaurant",
-        keyword: "(restauracja) AND (restaurant) AND (pizzeria)",
       },
       (results, status) => {
         if (status !== "OK" || !results) return;
