@@ -72,14 +72,18 @@ exports.createUserJourney = catchAsync(async (req, res, next) => {
   const arr2 = journeys;
   const arr1 = updatedUser.journeys;
 
-  const exclude = (arr1, arr2) => {
-    return arr1.filter((o1) => arr2.map((o2) => o2.foo).indexOf(o1.foo) === -1);
-  };
+  function getDifference(array1, array2) {
+    return array1.filter((object1) => {
+      return !array2.some((object2) => {
+        return object1._id.toString() === object2._id.toString();
+      });
+    });
+  }
 
   res.status(200).json({
     status: 'success',
     data: {
-      journey: exclude(arr2, arr1),
+      journey: getDifference(arr1, arr2)[0],
     },
   });
 });
@@ -125,22 +129,32 @@ exports.deleteUserJourney = catchAsync(async (req, res, next) => {
 exports.updateUserJourney = catchAsync(async (req, res, next) => {
   try {
     const { id, journeyId } = req.params;
+    const journey = req.body;
+    console.log(journey);
     const user = await User.findById(id);
     const existingInJourneys = user.journeys.find(
-      (journey) => journey._id == journeyId
+      (journeyA) => journeyA._id == journey._id
     );
     const existingInFavourites = user.favourites.find(
-      (favourite) => favourite._id == journeyId
+      (favourite) => favourite._id == journey._id
     );
-    const journey = req.body;
-    console.log(existingInJourneys, existingInFavourites);
 
     if (existingInJourneys !== undefined) {
       const updatedUser = await User.findOneAndUpdate(
-        { 'journeys._id': journeyId },
+        { 'journeys._id': journey._id },
         {
           $set: {
-            'journeys.$': journey,
+            'journeys.$._id': journey._id,
+            'journeys.$.startPlace': journey.startPlace,
+            'journeys.$.endPlace': journey.endPlace,
+            'journeys.$.startDate': journey.startDate,
+            'journeys.$.endDate': journey.endDate,
+            'journeys.$.transportType': journey.transportType,
+            'journeys.$.length': journey.length,
+            'journeys.$.journeyType': journey.journeyType,
+            'journeys.$.items': journey.items,
+            'journeys.$.people': journey.people,
+            'journeys.$.fuel': journey.fuel,
           },
         },
         { new: true }

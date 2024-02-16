@@ -329,7 +329,6 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
 
       navigate(`/dashboard/${data.data.journey._id}`);
     } else if (mode == "EDIT") {
-      console.log(journey);
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/users/journeys/${user.id}/${
           journey._id
@@ -338,6 +337,7 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            _id: journey._id,
             startPlace: originRef.current?.value,
             endPlace: destinationRef.current?.value,
             startDate: journey.startDate,
@@ -386,7 +386,6 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
       new Date().getFullYear();
     const latestDate =
       latest.getDate() + "-" + latest.getMonth() + "-" + latest.getFullYear();
-    console.log(today, latestDate);
     if (today == latestDate) {
       setFuelPrices(data.data.prices[0]);
     } else {
@@ -426,10 +425,6 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
       setCurrentMode("VIEW");
     }
   }, [data]);
-
-  useEffect(() => {
-    console.log(fuelPrices);
-  }, [fuelPrices]);
 
   if (!isLoaded) {
     return <LoadingScreen />;
