@@ -12,6 +12,17 @@ export interface QuizFormI extends QuizDataI {
   select: (num: number) => void;
 }
 
+export interface RecommendationDataI {
+  places: string[];
+  images: string[];
+}
+
+export interface RecommendationPanelI {
+  result: number | undefined;
+  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlace: React.Dispatch<React.SetStateAction<string>>;
+}
+
 //interface for transportData file, when choosing from available transport types in JourneyForm component
 export interface TransportDataI {
   name: TransportType | "FLYING";
