@@ -13,10 +13,12 @@ import slideIcon from "../assets/icons/slide_icon.svg";
 import plusIcon from "../assets/icons/plus_icon.svg";
 import removeIcon from "../assets/icons/remove_icon.svg";
 import arrowDownIcon from "../assets/icons/arrow_down_icon.svg";
+import locationIcon from "../assets/icons/location_icon.svg";
 
 // data and type imports
 import { JourneyFormI, FuelPricesI, FuelT } from "../types";
 import { fuelData } from "../data/fuelData";
+import toast from "react-hot-toast";
 
 const JourneyForm: React.FC<JourneyFormI> = ({
   journey,
@@ -83,6 +85,48 @@ const JourneyForm: React.FC<JourneyFormI> = ({
     });
   };
 
+  const getCurrentPosition = (place: string) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          var geocoder = new google.maps.Geocoder();
+          const currentPosition = new google.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          geocoder.geocode(
+            {
+              location: currentPosition,
+            },
+            function (results, status) {
+              if (status === google.maps.GeocoderStatus.OK) {
+                if (results) {
+                  if (place == "START") {
+                    setJourney({
+                      ...journey,
+                      startPlace: results[0].formatted_address,
+                    });
+                  } else {
+                    setJourney({
+                      ...journey,
+                      endPlace: results[0].formatted_address,
+                    });
+                  }
+                } else {
+                  toast.error("Nie można odczytać lokalizacji");
+                }
+              } else {
+                toast.error("Geokoder napotkał błąd: " + status);
+              }
+            }
+          );
+        },
+        () => toast.error("Błąd: Geolokacja jest wyłączona!"),
+        { enableHighAccuracy: true }
+      );
+    }
+  };
+
   useEffect(() => {
     journey.transportType !== "DRIVING" && resetFuelData();
     journey.transportType == "DRIVING" && getFuelPrices();
@@ -132,11 +176,16 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     name="startPlace"
                     placeholder="..."
                     defaultValue={journey.startPlace}
-                    className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                    className="w-[17.25rem] bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                     ref={originRef}
                     required
                   />
                 </Autocomplete>
+                <img
+                  src={locationIcon}
+                  onClick={() => getCurrentPosition("START")}
+                  className="w-7 ml-4 cursor-pointer"
+                />
               </label>
             </div>
             <div className="input flex flex-col">
@@ -150,11 +199,16 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     name="endPlace"
                     placeholder="..."
                     defaultValue={journey.endPlace}
-                    className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                    className="w-[17.25rem] bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                     ref={destinationRef}
                     required
                   />
                 </Autocomplete>
+                <img
+                  src={locationIcon}
+                  onClick={() => getCurrentPosition("END")}
+                  className="w-7 ml-4 cursor-pointer"
+                />
               </label>
             </div>
           </div>
@@ -218,6 +272,8 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     journey.transportType == mode.name
                       ? "border-primary-color"
                       : "border-transparent"
+                  } ${
+                    mode.name == "FLYING" && "opacity-50 pointer-events-none"
                   }`}
                   key={mode.name}
                   onClick={() => {

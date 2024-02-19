@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import authLogo from "../assets/icons/auth_logo_icon.svg";
 import background from "../assets/welcome_background.svg";
+import toast from "react-hot-toast";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -30,16 +31,18 @@ const SignInPage = () => {
     );
     const data = await response.json();
     if (data.status === "fail" || data.status === "error") {
-      alert("Login failed");
+      toast.error("Błędne dane!");
       return;
     }
-    alert("Login successful");
-    setEmail("");
-    setPassword("");
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    window.location.reload();
-    navigate("/dashboard");
+    toast.success("Pomyślnie zalogowano!");
+    setTimeout(() => {
+      setEmail("");
+      setPassword("");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.location.reload();
+      navigate("/dashboard");
+    }, 1000);
   };
 
   return (

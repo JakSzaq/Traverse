@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import authLogo from "../assets/icons/auth_logo_icon.svg";
 import background from "../assets/welcome_background.svg";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
@@ -43,13 +44,15 @@ const SignUpPage = () => {
     );
     const data = await response.json();
     if (data.status == "fail" || data.status == "error") {
-      alert(data.message);
+      toast.error(data.message);
     } else {
-      alert("Account created successfully");
-      setEmail("");
-      setName("");
-      setPassword("");
-      navigate("/signin");
+      toast.success("Pomyślnie utworzono konto!");
+      setTimeout(() => {
+        setEmail("");
+        setName("");
+        setPassword("");
+        navigate("/signin");
+      }, 1000);
     }
   };
 

@@ -23,7 +23,7 @@ const JourneyFuelSelector: React.FC<FuelSelectorI> = ({
       transition={{
         duration: ".1",
       }}
-      className="overlay fixed w-full h-full top-0 left-0 z-10 bg-black bg-opacity-70 flex items-center justify-center"
+      className="overlay fixed w-full h-full top-0 left-0 z-50 bg-black bg-opacity-70 flex items-center justify-center"
     >
       <motion.div
         initial={{ opacity: 0, y: 50 }}

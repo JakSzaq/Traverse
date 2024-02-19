@@ -3,6 +3,7 @@ import { JourneyDataI, JourneyListI } from "../types";
 import Journey from "./Journey";
 import { AnimatePresence, motion } from "framer-motion";
 import { journeyVariants } from "../data/animationVariants";
+import toast from "react-hot-toast";
 
 const JourneyList: React.FC<JourneyListI> = ({
   user,
@@ -21,17 +22,16 @@ const JourneyList: React.FC<JourneyListI> = ({
       );
       const data = await response.json();
       if (data.status === "fail" || data.status === "error") {
-        alert("Something went wrong!");
+        toast.error("Nie można załadować podróży!");
         return;
       }
-      console.log(data.data.userJourneys);
       setJourneys(data.data.userJourneys);
     };
     fetchJourneys();
   }, []);
 
   const sortByDate = (a: JourneyDataI, b: JourneyDataI) => {
-    return Number(new Date(b.startDate)) - Number(new Date(a.startDate));
+    return Number(new Date(b.endDate)) - Number(new Date(a.endDate));
   };
 
   if (journeys.length == 0) {

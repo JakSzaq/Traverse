@@ -17,6 +17,7 @@ import {
 import JourneyMap from "./JourneyMap";
 import JourneyPlaces from "./JourneyPlaces";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // main component for creating and showing journey with coresponding data
 const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
@@ -323,11 +324,13 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
         data.status === "error" ||
         data == undefined
       ) {
-        alert("Something went wrong!");
+        toast.error("Nie można utworzyć podróży!\nSpróbuj jeszcze raz!");
         return;
       }
-
-      navigate(`/dashboard/${data.data.journey._id}`);
+      toast.success("Pomyślnie utworzono podróż!");
+      setTimeout(() => {
+        navigate(`/dashboard/${data.data.journey._id}`);
+      }, 1000);
     } else if (mode == "EDIT") {
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/users/journeys/${user.id}/${
@@ -352,16 +355,20 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
         }
       );
       const data = await response.json();
+      console.log(data);
       if (
         data.status === "fail" ||
         data.status === "error" ||
         data == undefined
       ) {
-        alert("Something went wrong!");
+        toast.error("Nie można zmodyfikować podróży!\nSpróbuj jeszcze raz!");
         return;
       }
+      toast.success("Pomyślnie zmodyfikowano podróż!");
       setData(data);
-      navigate(`/dashboard/${data.data.journey._id}`);
+      if (data.length !== undefined) {
+        navigate(`/dashboard/${data.data.journey._id}`);
+      }
     }
   };
 
@@ -419,7 +426,7 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
   }, [currentMode]);
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data !== undefined && data.length !== undefined) {
       setJourney(data);
       setMode("VIEW");
       setCurrentMode("VIEW");

@@ -6,6 +6,7 @@ import trashIcon from "../assets/icons/remove_icon.svg";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { journeyVariants } from "../data/animationVariants";
+import toast from "react-hot-toast";
 
 const Journey: React.FC<JourneyI> = ({
   journey,
@@ -38,9 +39,10 @@ const Journey: React.FC<JourneyI> = ({
     );
     const result = await response.json();
     if (result.status === "fail" || result.status === "error") {
-      alert("Something went wrong!");
+      toast.error("Nie udało się usunąć podróży!");
       return;
     }
+    toast.success("Pomyślnie usunięto podróż!");
     setJourneys(result.journeys);
   };
 
@@ -55,8 +57,13 @@ const Journey: React.FC<JourneyI> = ({
     );
     const result = await response.json();
     if (result.status === "fail" || result.status === "error") {
-      alert("Something went wrong!");
+      toast.error("Nie udało się dodać do ulubionych!");
       return;
+    }
+    if (result.data.isFavourite) {
+      toast.success("Usunięto podróż z ulubionych!");
+    } else {
+      toast.success("Dodano podróż do ulubionych!");
     }
     setFavourites(result.data.favourites);
   };

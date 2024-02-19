@@ -130,7 +130,6 @@ exports.updateUserJourney = catchAsync(async (req, res, next) => {
   try {
     const { id, journeyId } = req.params;
     const journey = req.body;
-    console.log(journey);
     const user = await User.findById(id);
     const existingInJourneys = user.journeys.find(
       (journeyA) => journeyA._id == journey._id
@@ -163,10 +162,20 @@ exports.updateUserJourney = catchAsync(async (req, res, next) => {
     }
     if (existingInFavourites !== undefined) {
       const updatedUser = await User.findOneAndUpdate(
-        { 'favourites._id': journeyId },
+        { 'favourites._id': journey._id },
         {
           $set: {
-            'favourites.$': journey,
+            'favourites.$._id': journey._id,
+            'favourites.$.startPlace': journey.startPlace,
+            'favourites.$.endPlace': journey.endPlace,
+            'favourites.$.startDate': journey.startDate,
+            'favourites.$.endDate': journey.endDate,
+            'favourites.$.transportType': journey.transportType,
+            'favourites.$.length': journey.length,
+            'favourites.$.journeyType': journey.journeyType,
+            'favourites.$.items': journey.items,
+            'favourites.$.people': journey.people,
+            'favourites.$.fuel': journey.fuel,
           },
         },
         { new: true }
@@ -218,6 +227,7 @@ exports.toggleFavourites = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       favourites: updatedUser.favourites,
+      isFavourite: isFavourite,
     },
   });
 });

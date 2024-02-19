@@ -4,6 +4,7 @@ import Journey from "./Journey";
 import { AnimatePresence, motion } from "framer-motion";
 import { journeyVariants } from "../data/animationVariants";
 import starIcon from "../assets/icons/star_icon.svg";
+import toast from "react-hot-toast";
 
 const FavouriteList: React.FC<JourneyListI> = ({
   user,
@@ -22,7 +23,7 @@ const FavouriteList: React.FC<JourneyListI> = ({
       );
       const data = await response.json();
       if (data.status === "fail" || data.status === "error") {
-        alert("Something went wrong!");
+        toast.error("Nie można załadować ulubionych!");
         return;
       }
       setFavourites(data.data.userFavourites);
