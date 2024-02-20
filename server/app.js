@@ -19,9 +19,9 @@ app.use(express.static(`${__dirname}/public`));
 
 app.options('*', cors());
 
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// app.get('*', function (req, res) {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();

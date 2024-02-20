@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy } from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import ErrorPage from "./pages/ErrorPage";
+import { Toaster } from "react-hot-toast";
 
 const WelcomePage = lazy(() => import("./pages/WelcomePage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
@@ -16,6 +17,26 @@ function App() {
   return (
     <BrowserRouter basename="/">
       <Suspense fallback={<LoadingScreen />}>
+        <Toaster
+          toastOptions={{
+            style: {
+              padding: "10px 50px",
+              fontWeight: "bold",
+              maxWidth: "500px",
+              width: "auto",
+            },
+            success: {
+              style: {
+                border: "2px solid #22CC3D",
+              },
+            },
+            error: {
+              style: {
+                border: "2px solid red",
+              },
+            },
+          }}
+        />
         <Routes>
           <Route
             path="/"

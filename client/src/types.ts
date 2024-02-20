@@ -12,6 +12,17 @@ export interface QuizFormI extends QuizDataI {
   select: (num: number) => void;
 }
 
+export interface RecommendationDataI {
+  places: string[];
+  images: string[];
+}
+
+export interface RecommendationPanelI {
+  result: number | undefined;
+  setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlace: React.Dispatch<React.SetStateAction<string>>;
+}
+
 //interface for transportData file, when choosing from available transport types in JourneyForm component
 export interface TransportDataI {
   name: TransportType | "FLYING";
@@ -29,7 +40,20 @@ export interface JourneyDataI {
   length: string;
   items: string[];
   people: string[];
+  fuel: FuelT;
   _id: string;
+}
+
+export interface JourneyListI {
+  user: UserT;
+  journeys: JourneyDataI[];
+  setJourneys: React.Dispatch<React.SetStateAction<JourneyDataI[]>>;
+  setFavourites: React.Dispatch<React.SetStateAction<JourneyDataI[]>>;
+}
+
+export interface JourneyI extends Omit<JourneyListI, "journeys"> {
+  journey: JourneyDataI;
+  isFavorite: boolean;
 }
 
 export enum TransportType {
@@ -41,14 +65,31 @@ export enum TransportType {
 //interface for creating JourneyPanel component with either given data or no data
 export interface JourneyPropsI extends Partial<JourneyDataI> {}
 
+export interface JourneyPlacesI {
+  journey: JourneyPropsI;
+  position: google.maps.LatLng | google.maps.LatLngLiteral | undefined;
+  map: google.maps.Map | undefined;
+  markers: google.maps.Marker[];
+  setMarkers: React.Dispatch<React.SetStateAction<google.maps.Marker[]>>;
+  setMode: React.Dispatch<React.SetStateAction<JourneyMode | undefined>>;
+}
+
+export type JourneyMode = "CREATE" | "EDIT" | "VIEW";
+
+export interface JourneyPanelI extends JourneyPropsI {
+  mode: JourneyMode;
+}
+
 export interface JourneyFormI {
   journey: JourneyPropsI;
   setJourney: React.Dispatch<React.SetStateAction<JourneyPropsI>>;
   originRef: React.RefObject<HTMLInputElement>;
   destinationRef: React.RefObject<HTMLInputElement>;
-  setFuelPrice: React.Dispatch<React.SetStateAction<FuelT>>;
   transportData: TransportDataI[];
-  createJourney: (e: React.FormEvent<HTMLFormElement>) => Promise<boolean>;
+  createJourney: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  setMode: React.Dispatch<React.SetStateAction<JourneyMode>>;
+  fuelPrices: FuelPricesI | undefined;
+  getFuelPrices: () => Promise<void>;
 }
 
 export interface JourneyMapI {
@@ -57,12 +98,13 @@ export interface JourneyMapI {
   directionsResponse: google.maps.DirectionsResult | null;
   duration: string | null;
   position: google.maps.LatLng | google.maps.LatLngLiteral | undefined;
+  startPosition: google.maps.LatLng | google.maps.LatLngLiteral | undefined;
   fuelPrice: string | undefined;
   journeyType: string;
   setMap: React.Dispatch<React.SetStateAction<google.maps.Map | undefined>>;
-  originRef: React.RefObject<HTMLInputElement>;
-  destinationRef: React.RefObject<HTMLInputElement>;
   transportData: TransportDataI[];
+  mode: JourneyMode;
+  markers: google.maps.Marker[];
 }
 //interface for user authentication
 export type UserT = {
@@ -108,3 +150,15 @@ export type refGenerics =
   | HTMLInputElement
   | HTMLImageElement
   | null;
+
+export interface PlaceI {
+  element: google.maps.places.PlaceResult;
+  map: google.maps.Map | undefined;
+  setSelectedPlace: React.Dispatch<
+    React.SetStateAction<google.maps.places.PlaceResult | undefined>
+  >;
+}
+
+export interface PlaceDetailsI extends Omit<PlaceI, "map"> {
+  service: google.maps.places.PlacesService | undefined;
+}
