@@ -144,7 +144,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
   }, [fuelType]);
 
   return (
-    <div className="form bg-transparent w-full h-[90vh]">
+    <div className="form bg-transparent w-full h-auto overflow-y-scroll">
       <AnimatePresence>
         {isClicked === true ? (
           <JourneyFuelSelector
@@ -157,14 +157,14 @@ const JourneyForm: React.FC<JourneyFormI> = ({
       </AnimatePresence>
       <form
         onSubmit={createJourney}
-        className="w-full h-full grid grid-cols-2 grid-rows-[1fr_1fr_1fr_2fr_0.5fr] overflow-y-scroll gap-y-4 gap-x-10"
+        className="w-full h-auto lg:h-[90vh] grid grid-cols-2 lg:grid-cols-2 overflow-y-scroll gap-y-4 gap-x-4 lg:gap-x-10"
       >
         <div className="place w-full bg-white rounded-3xl col-span-2 py-4 px-6 relative">
           <hr className="h-[2px] bg-primary-color"></hr>
           <h3 className="absolute top-2.5 bg-white pr-4 text-lg text-primary-color font-bold">
             MIEJSCA
           </h3>
-          <div className="inputs flex flex-row flex-wrap justify-between mt-5">
+          <div className="inputs flex flex-col gap-4 lg:gap-0 lg:flex-row flex-wrap justify-between mt-5">
             <div className="input flex flex-col">
               <h2 className="text-3xl font-bold mb-2">POCZĄTEK</h2>
               <label className="flex flex-row items-center justify-between h-14 bg-back-color py-4 px-6 rounded-full">
@@ -176,7 +176,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     name="startPlace"
                     placeholder="..."
                     defaultValue={journey.startPlace}
-                    className="w-[17.25rem] bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                    className="w-full lg:w-[17.25rem] bg-transparent h-12 font-medium text-3xl justify-self-start uppercase border-none outline-none"
                     ref={originRef}
                     required
                   />
@@ -184,7 +184,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                 <img
                   src={locationIcon}
                   onClick={() => getCurrentPosition("START")}
-                  className="w-7 ml-4 cursor-pointer"
+                  className="w-7 ml-auto lg:ml-4 cursor-pointer"
                 />
               </label>
             </div>
@@ -199,7 +199,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                     name="endPlace"
                     placeholder="..."
                     defaultValue={journey.endPlace}
-                    className="w-[17.25rem] bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                    className="w-full lg:w-[17.25rem] bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                     ref={destinationRef}
                     required
                   />
@@ -207,7 +207,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                 <img
                   src={locationIcon}
                   onClick={() => getCurrentPosition("END")}
-                  className="w-7 ml-4 cursor-pointer"
+                  className="w-7 ml-auto lg:ml-4 cursor-pointer"
                 />
               </label>
             </div>
@@ -218,10 +218,10 @@ const JourneyForm: React.FC<JourneyFormI> = ({
           <h3 className="absolute top-2.5 bg-white pr-4 text-lg text-primary-color font-bold">
             DATA
           </h3>
-          <div className="inputs flex flex-row flex-wrap justify-between mt-5 mr-0">
-            <div className="input flex flex-col">
+          <div className="inputs flex flex-col gap-4 lg:gap-0 lg:flex-row flex-wrap justify-between mt-5 mr-0">
+            <div className="input w-full lg:w-auto flex flex-col">
               <h2 className="text-3xl font-bold mb-2">WYJAZD</h2>
-              <label className="flex flex-row items-center justify-between h-14 bg-back-color py-4 px-6 rounded-full">
+              <label className="flex flex-row items-center justify-between h-14 bg-back-color py-4 px-6 rounded-full ">
                 <img src={startIcon} className="w-7 mr-4" />
                 <input
                   type="date"
@@ -230,12 +230,12 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                   placeholder=""
                   value={journey.startDate?.toString()}
                   onChange={handleJourneyChange}
-                  className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                  className="w-full lg:w-80 min-w-0 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                   required
                 />
               </label>
             </div>
-            <div className="input flex flex-col">
+            <div className="input w-full lg:w-auto flex flex-col">
               <h2 className="text-3xl font-bold mb-2">POWRÓT</h2>
               <label className="flex flex-row items-center justify-between h-14 bg-back-color py-4 px-6 rounded-full">
                 <img src={endIcon} className="w-7 mr-4" />
@@ -251,19 +251,19 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                       : journey.endDate.toString()
                   }
                   required
-                  className="w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
+                  className="w-full lg:w-80 bg-transparent h-12 font-medium text-3xl uppercase border-none outline-none"
                 />
               </label>
             </div>
           </div>
         </div>
-        <div className="transport w-full bg-white rounded-3xl col-span-2 pt-4 pb-2 px-6 relative">
+        <div className="transport h-auto w-full bg-white rounded-3xl col-span-2 pt-4 pb-2 px-6 relative">
           <hr className="h-[2px] bg-primary-color"></hr>
           <h3 className="absolute top-2.5 bg-white pr-4 text-lg text-primary-color font-bold">
             ŚRODEK TRANSPORTU
           </h3>
-          <div className="w-[100%] relative gap-3 mt-6">
-            <div className="w-[95%] pb-2 flex flex-row gap-3 duration-300 overflow-hidden">
+          <div className="w-full relative gap-3 mt-6">
+            <div className="w-full sm:w-[95%] pb-2 flex flex-col sm:flex-row gap-3 duration-300 overflow-hidden">
               {transportData.map((mode) => (
                 <div
                   className={` bg-back-color flex ${
@@ -302,7 +302,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
               ))}
             </div>
             <img
-              className={`w-[4%] absolute top-8 right-0 duration-300 cursor-pointer ${
+              className={`hidden sm:block w-[4%] absolute top-8 right-0 duration-300 cursor-pointer ${
                 expanded ? "rotate-180" : "rotate-0"
               }`}
               src={slideIcon}
@@ -310,7 +310,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
             />
           </div>
         </div>
-        <div className="items w-full bg-white rounded-3xl py-4 px-6 relative">
+        <div className="items w-full bg-white col-span-2 sm:col-span-1 rounded-3xl py-4 px-6 relative">
           <hr className="h-[2px] bg-primary-color"></hr>
           <h3 className="absolute top-2.5 bg-white pr-4 text-lg text-primary-color font-bold">
             TWOJE RZECZY
@@ -378,7 +378,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
             </div>
           </div>
         </div>
-        <div className="people w-full bg-white rounded-3xl py-4 px-6 relative">
+        <div className="people w-full bg-white col-span-2 sm:col-span-1 rounded-3xl py-4 px-6 relative">
           <hr className="h-[2px] bg-primary-color"></hr>
           <h3 className="absolute top-2.5 bg-white pr-4 text-lg text-primary-color font-bold">
             TWOJE OSOBY
@@ -448,7 +448,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
             </div>
           </div>
         </div>
-        <div className="btn-container cursor-pointer col-span-2 h-24 bg-primary-color rounded-3xl flex justify-center items-center relative overflow-hidden before:content-[''] before:absolute before:bg-[rgba(255,255,255,.5)] before:duration-1000 before:skew-x-[-45deg] before:hover:skew-x-[-45deg] before:-left-56 before:hover:left-[110%] before:w-44 before:h-44">
+        <div className="btn-container cursor-pointer col-span-2 h-28 mb-3 sm:h-24 bg-primary-color rounded-3xl flex justify-center items-center relative overflow-hidden before:content-[''] before:absolute before:bg-[rgba(255,255,255,.5)] before:duration-1000 before:skew-x-[-45deg] before:hover:skew-x-[-45deg] before:-left-56 before:hover:left-[110%] before:w-44 before:h-44">
           <AnimatePresence>
             {!isVisible && (
               <motion.div
@@ -472,7 +472,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
           <button
             ref={buttonRef}
             type="submit"
-            className="submit col-span-2 w-full h-full font-bold text-5xl bg-transparent rounded-3xl flex justify-center items-center gap-5 text-white"
+            className="submit w-[50vh] sm:w-full h-auto text-left font-bold text-3xl xs:text-4xl sm:text-5xl bg-transparent rounded-3xl flex justify-center items-center xs:gap-5 p-6 sm:p-0 text-white"
           >
             WYZNACZ TRASĘ{" "}
             <img ref={imageRef} src={logoIcon} className="w-8 fill-white" />

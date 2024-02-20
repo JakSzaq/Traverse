@@ -9,6 +9,9 @@ module.exports = {
         "map-color": "#DFFFE2",
         "gradient-color": "rgba(190, 255, 201, 0.7)",
       },
+      screens: {
+        xs: "324px",
+      },
     },
   },
   variants: {

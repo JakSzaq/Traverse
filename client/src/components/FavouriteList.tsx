@@ -50,7 +50,7 @@ const FavouriteList: React.FC<JourneyListI> = ({
           variants={journeyVariants}
           initial="initial"
           animate="animate"
-          className="favouriteList snap-mandatory snap-y overflow-y-scroll max-h-[18vh] z-0 flex flex-col gap-2 -mb-4"
+          className="favouriteList snap-mandatory snap-y overflow-y-scroll max-h-[15rem] sm:max-h-[9.5rem] z-0 flex flex-col gap-2 -mb-4"
         >
           {journeys.sort(sortByDate).map((favourite: JourneyDataI) => (
             <Journey
