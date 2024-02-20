@@ -20,7 +20,10 @@ const Journey: React.FC<JourneyI> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (Number(new Date(journey.endDate)) < Number(new Date()) && !isFavorite) {
+    if (
+      Number(new Date(journey.endDate)) + 86400000 < Number(new Date()) &&
+      !isFavorite
+    ) {
       setIsOutdated(true);
     } else {
       setIsOutdated(false);

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy } from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import ErrorPage from "./pages/ErrorPage";
 import { Toaster } from "react-hot-toast";

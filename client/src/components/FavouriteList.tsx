@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { JourneyDataI, JourneyListI } from "../types";
 import Journey from "./Journey";
 import { AnimatePresence, motion } from "framer-motion";

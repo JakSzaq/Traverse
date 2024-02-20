@@ -1,15 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import JourneyPanel from "../components/JourneyPanel";
 import LoadingScreen from "../components/LoadingScreen";
 import { JourneyPropsI, UserT } from "../types";
+import toast from "react-hot-toast";
 
 const JourneyPage = () => {
   const { id } = useParams();
   const user: UserT = JSON.parse(localStorage.getItem("user")!);
   const [isLoaded, setIsLoaded] = useState(false);
   const [journey, setJourney] = useState<JourneyPropsI>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getJourney = async () => {
@@ -23,8 +25,11 @@ const JourneyPage = () => {
         }
       );
       const result = await response.json();
+      if (result.data.journey == undefined) {
+        navigate("error");
+      }
       if (result.status === "fail" || result.status === "error") {
-        alert("Something went wrong!");
+        toast.error("Nie można pobrać danych podróży!");
         return;
       }
       setJourney({
