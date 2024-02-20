@@ -12,14 +12,14 @@ const ErrorPage = () => {
   }
 
   return (
-    <div className="h-screen w-full bg-back-color flex flex-col justify-center items-center gap-10 relative">
+    <div className="h-screen sm:w-full p-10 sm:p-0 bg-back-color flex flex-col justify-center items-center gap-10 relative">
       <h2 className="text-4xl font-bold mt-10 -skew-y-6 z-10">ZABŁĄDZIŁEŚ</h2>
       <img className="w-20 z-10" src={errorIcon} />
-      <h2 className="font-medium z-10">
+      <h2 className="font-medium z-10 text-center">
         Ta strona nie istnieje lub nie masz do niej dostępu
       </h2>
       <img className="absolute w-full h-[90vh] z-0 opacity-10" src={logoIcon} />
-      <h2 className="font-bold -mt-8">
+      <h2 className="font-bold -mt-8 text-center">
         Zostaniesz przeniesiony na stronę główną za {time} {label}
       </h2>
     </div>

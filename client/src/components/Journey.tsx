@@ -84,7 +84,7 @@ const Journey: React.FC<JourneyI> = ({
         outdated && "bg-opacity-50"
       }`}
     >
-      <div className="dateRow w-full flex flex-row justify-between items-center text-white font-bold text-xl">
+      <div className="dateRow w-full flex flex-row justify-between items-center text-white font-bold text-xl mb-2 sm:mb-0">
         <p>
           {("0" + new Date(journey.startDate).getDate()).slice(-2) +
             "." +
@@ -96,21 +96,21 @@ const Journey: React.FC<JourneyI> = ({
         </p>
         {new Date(journey.endDate).getFullYear()}
       </div>
-      <div className="placeRow w-full flex flex-row justify-between items-center text-white font-bold text-3xl uppercase">
-        <p className="w-auto max-w-[11rem] text-ellipsis overflow-hidden whitespace-nowrap">
+      <div className="placeRow w-full flex flex-col gap-2 sm:gap-0 sm:flex-row justify-between items-center text-white font-bold text-3xl uppercase">
+        <p className="w-auto max-w-[90%] sm:max-w-[11rem] text-ellipsis overflow-hidden whitespace-nowrap">
           {journey.startPlace.split(",", 1)[0]}
         </p>
-        <img className="w-10 absolute right-[47%]" src={arrowIcon} />
-        <p className="w-auto max-w-[11rem] text-ellipsis overflow-hidden whitespace-nowrap">
+        <img className="w-10 sm:absolute right-[47%]" src={arrowIcon} />
+        <p className="w-auto  max-w-[90%] sm:max-w-[11rem] text-ellipsis overflow-hidden whitespace-nowrap">
           {journey.endPlace.split(",", 1)[0]}
         </p>
       </div>
-      <div className="buttons w-full flex flex-row justify-between items-center mt-4 mb-1 ">
+      <div className="buttons w-full flex flex-row justify-between items-center mt-4 mb-1 gap-4 sm:gap-0 ">
         <div
           onClick={() => addToFavourites()}
           onMouseEnter={() => setIsHovered(2)}
           onMouseLeave={() => setIsHovered(1)}
-          className={`w-8 h-8 p-[6px] flex justify-center items-center rounded-full duration-300 hover:bg-yellow-400 bg-back-color bg-opacity-50 hover:bg-opacity-100 cursor-pointer opacity-0 ${
+          className={`h-10 w-10 p-[8px] sm:w-8 sm:h-8 sm:p-[6px] flex justify-center items-center rounded-full duration-300 hover:bg-yellow-400 bg-back-color bg-opacity-50 hover:bg-opacity-100 cursor-pointer opacity-0 ${
             isHovered !== 0 && "opacity-100"
           } ${
             isFavorite
@@ -121,9 +121,9 @@ const Journey: React.FC<JourneyI> = ({
           <img className="w-full invert brightness-0" src={starIcon} />
         </div>
         <button
-          className={`button w-50 h-6 flex items-center duration-300 bg-opacity-50 hover:bg-opacity-100 ${
+          className={`button w-auto sm:w-50 h-10 sm:h-6 flex items-center duration-300 bg-opacity-50 hover:bg-opacity-100 ${
             isFavorite ? "bg-yellow-400" : "bg-back-color"
-          } rounded-full px-10 py-4 font-bold text-sm`}
+          } rounded-full px-2 xs:px-10 py-4 font-bold text-xs sm:text-sm`}
           onClick={() => navigate(journey._id.toString())}
         >
           WYŚWIETL SZCZEGÓŁY
@@ -132,7 +132,7 @@ const Journey: React.FC<JourneyI> = ({
           onClick={() => (isFavorite ? addToFavourites() : removeJourney())}
           onMouseEnter={() => setIsHovered(3)}
           onMouseLeave={() => setIsHovered(1)}
-          className={`w-8 h-8 p-[8px] flex justify-center items-center rounded-full duration-300 hover:bg-red-500 ${
+          className={`h-10 w-10 p-[10px] sm:w-8 sm:h-8 sm:p-[8px] flex justify-center items-center rounded-full duration-300 hover:bg-red-500 ${
             isFavorite ? "bg-yellow-400" : "bg-back-color"
           } bg-opacity-50 hover:bg-opacity-100 cursor-pointer opacity-0 ${
             isHovered !== 0 && "!opacity-100"

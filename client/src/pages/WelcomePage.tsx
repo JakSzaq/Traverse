@@ -52,7 +52,7 @@ const WelcomePage: React.FC = () => {
       ></motion.div>
       <div
         key={2}
-        className="content w-full h-screen relative overflow-hidden bg-back-color z-0 flex flex-col flex-wrap justify-center items-center"
+        className="content w-full h-screen relative overflow-hidden bg-back-color z-0 flex flex-col justify-center items-center "
       >
         <div className="overlay w-[150%] h-screen absolute top-0 bg-gradient-to-bl from-back-color from-[30%] to-gradient-color to-100% -z-10 origin-center"></div>
         <motion.img
@@ -65,27 +65,30 @@ const WelcomePage: React.FC = () => {
             duration: 1,
           }}
         />
-        <div className="header w-[85%] h-[100px] bg-none flex justify-between flex-wrap mt-20 mr-0 mb-10 ml-0">
-          <div className="hleft">
-            <h3 className="text-5xl font-semibold">Twoja podróż</h3>
-            <h2 className="text-6xl font-semibold" id="text">
+        <div className="header w-[85%] h-auto bg-none flex justify-between flex-wrap sm:mt-20 mr-0 ml-0">
+          <div className="hleft w-full lg:w-auto text-center lg:text-left flex flex-col justify-center">
+            <h3 className="text-4xl sm:text-5xl font-semibold">Twoja podróż</h3>
+            <h2 className="text-5xl sm:text-6xl font-semibold" id="text">
               zaczyna się tutaj
             </h2>
           </div>
-          <div className="hright h-full bg-white p-[5px] flex justify-center items-center rounded-[35px]">
-            <img className="w-[70%] cursor-pointer" src={logo} />
+          <div className="hright h-28 w-full lg:w-auto bg-white p-[5px] my-6 flex justify-center items-center rounded-[35px]">
+            <img
+              className="w-[70%] sm:p-4 lg:p-0 max-w-xs lg:max-w-none cursor-pointer"
+              src={logo}
+            />
           </div>
         </div>
-        <div className="buttons w-[85%] h-[100px] z-10 flex flex-col justify-start items-start align gap-4">
+        <div className="buttons w-[85%] h-auto z-10 flex flex-col sm:flex-row lg:flex-col justify-start items-start gap-4">
           <button
-            className="btn bg-primary-color px-20 py-2 border-2 border-solid border-transparent text-2xl rounded-2xl cursor-pointer font-semibold transition duration-[250ms] hover:border-primary-color hover:bg-transparent"
+            className="btn bg-primary-color sm:h-20 lg:h-auto w-full lg:w-auto lg:px-20 py-4 sm:py-2 border-2 border-solid border-transparent text-2xl rounded-2xl cursor-pointer font-semibold transition duration-[250ms] hover:border-primary-color hover:bg-transparent"
             id="log"
             onClick={handleClick}
           >
             Zaloguj się
           </button>
           <button
-            className="btn bg-white px-20 py-2 border-2 border-solid border-transparent text-2xl rounded-2xl cursor-pointer font-semibold transition duration-[250ms] hover:border-black hover:bg-transparent"
+            className="btn bg-white w-full sm:h-20 lg:h-auto lg:w-auto lg:px-20 py-4 sm:py-2 border-2 border-solid border-transparent text-2xl rounded-2xl cursor-pointer font-semibold transition duration-[250ms] hover:border-black hover:bg-transparent"
             id="reg"
             onMouseOver={() => setTrackHover(true)}
             onMouseOut={() => setTrackHover(false)}
@@ -94,7 +97,7 @@ const WelcomePage: React.FC = () => {
             Utwórz nowe konto
           </button>
         </div>
-        <div className="image flex-auto w-[85vw] h-auto flex justify-end items-end mb-20">
+        <div className="image hidden sm:flex flex-auto w-[80vw] lg:w-[85vw] h-auto justify-end items-end sm:mb-6 lg:mb-20">
           <WelcomeGraphic />
         </div>
       </div>

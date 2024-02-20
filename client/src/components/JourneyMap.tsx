@@ -10,6 +10,8 @@ import pointerIcon from "../assets/icons/Pointer.svg";
 import startIcon from "../assets/icons/start_icon.svg";
 import itemsIcon from "../assets/icons/items_icon.svg";
 import peopleIcon from "../assets/icons/people_icon.svg";
+import expandIcon from "../assets/icons/expand_icon.svg";
+import shrinkIcon from "../assets/icons/shrink_icon.svg";
 
 // data and type imports
 import { JourneyMapI } from "../types";
@@ -31,6 +33,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
   markers,
 }) => {
   const [toggle, setToggle] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const small = {
     url: pointerIcon,
@@ -86,7 +89,11 @@ const JourneyMap: React.FC<JourneyMapI> = ({
   }, [mode]);
 
   return (
-    <div className="map h-[90vh] w-full bg-primary-color rounded-[3rem]">
+    <div
+      className={`map lg:h-[90vh] duration-100 w-full bg-primary-color rounded-[3rem] ${
+        expanded ? "h-[90vh]" : "h-[30vh]"
+      }`}
+    >
       <GoogleMap
         id="map"
         center={mode == "VIEW" ? position : center}
@@ -122,6 +129,11 @@ const JourneyMap: React.FC<JourneyMapI> = ({
             }}
           />
         )}
+        <img
+          onClick={() => setExpanded(!expanded)}
+          className="lg:hidden expand absolute top-0 right-0 m-4 rounded-lg border-2 border-white w-10 h-10 duration-100 bg-primary-color p-1.5 hover:scale-105 cursor-pointer"
+          src={expanded ? shrinkIcon : expandIcon}
+        ></img>
         {mode == "VIEW" &&
           position !== undefined &&
           startPosition !== undefined && (

@@ -438,7 +438,7 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
   }
 
   return (
-    <div className="content w-full h-screen grid grid-cols-2 gap-12 mt-16 px-6 overflow-hidden">
+    <div className="content w-full h-screen grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 mt-16 px-3 sm:px-6 overflow-hidden">
       <JourneyMap
         map={map}
         journey={journey}

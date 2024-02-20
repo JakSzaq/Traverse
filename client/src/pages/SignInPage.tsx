@@ -55,7 +55,7 @@ const SignInPage = () => {
           ></img>
         </div>
       </div>
-      <div className="content overflow-y-scroll pt-10 px-14 flex flex-col justify-between items-center absolute top-0 w-[24rem] h-screen bg-white drop-shadow-[0_0_30px_rgb(34,204,61)]">
+      <div className="content overflow-y-scroll w-[95%] sm:w-[24rem] pt-10 px-8 sm:px-14 flex flex-col justify-between items-center absolute top-0 h-screen bg-white drop-shadow-[0_0_30px_rgb(34,204,61)]">
         <div className="form w-full flex flex-col justify-evenly items-center gap-8">
           <img
             className="w-24 mb-10 duration-200 drop-shadow-[0_0_0px_rgb(34,204,61)] hover:rotate-12 cursor-pointer"
@@ -66,7 +66,7 @@ const SignInPage = () => {
             onSubmit={handleSignIn}
             className="w-full flex flex-col items-center justify-center gap-8"
           >
-            <h2 className="header font-bold text-[2.6rem] leading-10">
+            <h2 className="header font-bold text-3xl xs:text-[2.6rem] leading-10">
               LOGOWANIE
             </h2>
             <div className="w-full flex items-center justify-center">
@@ -100,12 +100,12 @@ const SignInPage = () => {
               </span>
             </div>
             <input
-              className="peer cursor-pointer w-full text-lg p-2 text-center font-bold placeholder:text-black duration-200 border-2 border-primary-color bg-primary-color hover:bg-back-color rounded-lg outline-none"
+              className="peer cursor-pointer w-full text-lg p-4 sm:p-2 text-center font-bold placeholder:text-black duration-200 border-2 border-primary-color bg-primary-color hover:bg-back-color rounded-lg outline-none"
               type="submit"
               value="ZALOGUJ SIĘ"
             />
           </form>
-          <p className="prompt font-bold">
+          <p className="prompt font-bold text-center xs:text-left">
             Nie masz konta?{" "}
             <a
               className="link text-primary-color cursor-pointer hover:underline underline-offset-4"
