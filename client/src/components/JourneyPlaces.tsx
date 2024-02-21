@@ -213,7 +213,7 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
   }, [headers, hotels, restaurants, attractions]);
 
   return (
-    <div className="places bg-transparent w-full h-auto overflow-y-scroll flex flex-col justify-between gap-6">
+    <div className="places bg-transparent w-full h-auto overflow-y-scroll flex flex-col justify-between gap-6 mb-8">
       {isLoaded ? (
         <div className="content bg-white rounded-3xl h-full">
           <div className="heading w-full bg-white rounded-3xl col-span-2 py-4 px-6 relative">

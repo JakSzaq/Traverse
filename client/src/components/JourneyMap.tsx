@@ -131,13 +131,20 @@ const JourneyMap: React.FC<JourneyMapI> = ({
         )}
         <img
           onClick={() => setExpanded(!expanded)}
-          className="lg:hidden expand absolute top-0 right-0 m-4 rounded-lg border-2 border-white w-10 h-10 duration-100 bg-primary-color p-1.5 hover:scale-105 cursor-pointer"
+          className="xs:flex lg:hidden expand scale-75 lg:scale-100 absolute top-0 right-0 m-4 rounded-lg border-2 border-white w-12 h-12 duration-100 bg-primary-color p-1.5 cursor-pointer"
           src={expanded ? shrinkIcon : expandIcon}
         ></img>
         {mode == "VIEW" &&
           position !== undefined &&
           startPosition !== undefined && (
-            <>
+            <div className="w-full h-full absolute justify-center items-end pointer-events-none">
+              <h2
+                className={`h-12 w-full lg:hidden absolute bottom-0 items-center justify-center backdrop-blur-3xl hover:bg-back-color rounded-full drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] text-center text-xs xs:text-sm sm:text-xl font-bold ${
+                  expanded ? "hidden" : "flex"
+                }`}
+              >
+                POWIĘKSZ MAPĘ ABY ZOBACZYĆ SZCZEGÓŁY PODRÓŻY
+              </h2>
               <Marker
                 options={{ icon: toggle ? small : big }}
                 position={position}
@@ -154,19 +161,23 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                 position={startPosition}
                 onClick={() => panToPoint(startPosition)}
               />
-              <div className="w-full h-full absolute flex justify-center items-end duration-300 p-6 pointer-events-none">
+              <div
+                className={`w-full h-full absolute justify-center items-end lg:flex duration-300 p-6 pointer-events-none ${
+                  expanded ? "flex" : "hidden"
+                }`}
+              >
                 <div
-                  className={`time absolute top-0 w-auto px-2 h-12 mt-4 pointer-events-auto bg-map-color flex justify-center items-center rounded-2xl drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] translate-y-[-55px] duration-500 ${
+                  className={`time absolute top-0 left-0 lg:left-auto w-auto px-2 scale-75 lg:scale-100 h-12 mt-4 pointer-events-auto bg-map-color flex justify-center items-center rounded-2xl drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] translate-y-[-55px] duration-500 ${
                     toggle ? "translate-y-[-55px]" : "translate-y-[0px]"
                   }`}
                 >
                   <img className="w-9" src={clockIcon} />
-                  <p className="font-bold text-lg mx-5">
+                  <p className="font-bold text-lg mx-3 xs:mx-5">
                     {duration?.toUpperCase()}
                   </p>
                 </div>
                 <div
-                  className={`bg-map-color flex items-center justify-center w-full h-[24rem] rounded-[50px] px-7 py-6 basis-full duration-500 pointer-events-auto ${
+                  className={`bg-map-color flex flex-col lg:flex-row items-center justify-center w-full h-[24rem] rounded-[50px] px-7 py-6 basis-full duration-500 pointer-events-auto ${
                     toggle ? "translate-y-[400px]" : "translate-y-[0px]"
                   }`}
                 >
@@ -180,133 +191,139 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                   >
                     UKRYJ TRASĘ
                   </button>
-                  <div className="group left h-full flex flex-col border-r-2 border-black w-[35%] pr-7 duration-300 hover:w-full min-w-0 overflow-hidden">
-                    <div className="top flex flex-row  justify-between w-full min-w-0">
-                      <h3 className="w-full font-bold text-4xl text-ellipsis overflow-hidden whitespace-nowrap text-primary-color">
-                        {journey.startPlace !== undefined
-                          ? journey.startPlace!.toUpperCase()
+                  <div className="w-full h-full flex flex-wrap lg:flex-nowrap overflow-y-scroll snap-mandatory snap-y">
+                    <div className="group left snap-center snap-always h-full flex flex-col lg:border-r-2 border-black w-full lg:w-[35%] lg:pr-7 duration-300 hover:w-full min-w-0 lg:overflow-hidden">
+                      <div className="top flex flex-row justify-between w-full min-w-0 lg:mb-4">
+                        <h3 className="w-full font-bold text-3xl lg:text-4xl text-ellipsis overflow-hidden whitespace-nowrap text-primary-color">
+                          {journey.startPlace !== undefined
+                            ? journey.startPlace!.toUpperCase()
+                            : ""}
+                        </h3>
+                        <img
+                          className="w-12 duration-300 group-hover:w-20 group-hover:animate-pulse"
+                          src={arrowIcon}
+                        />
+                      </div>
+                      <h3 className="font-bold inline-block text-5xl lg:-mt-5 lg:text-[4rem] text-ellipsis overflow-hidden whitespace-nowrap text-black">
+                        {journey.endPlace !== undefined
+                          ? journey.endPlace!.toUpperCase()
                           : ""}
                       </h3>
-                      <img
-                        className="w-12 duration-300 group-hover:w-20 group-hover:animate-pulse"
-                        src={arrowIcon}
-                      />
-                    </div>
-                    <h3 className="font-bold -mt-5 text-[4rem] text-ellipsis overflow-hidden whitespace-nowrap text-black">
-                      {journey.endPlace !== undefined
-                        ? journey.endPlace!.toUpperCase()
-                        : ""}
-                    </h3>
-                    <hr className="h-[3px] bg-black -mt-2 mb-6"></hr>
-                    <div className="data flex flex-row justify-between items-center uppercase">
-                      <div className="route flex flex-col border-black">
-                        <h4 className="text-xl -mb-2 label text-primary-color font-bold">
-                          Trasa
-                        </h4>
-                        <h3 className="text-3xl label text-black font-bold">
-                          {journey.length}
-                        </h3>
+                      <hr className="h-[3px] bg-black mt-2 mb-6"></hr>
+                      <div className="data flex flex-row justify-between items-center uppercase">
+                        <div className="route flex flex-col border-black">
+                          <h4 className="text-xl -mb-2 label text-primary-color font-bold">
+                            Trasa
+                          </h4>
+                          <h3 className="text-3xl label text-black font-bold">
+                            {journey.length}
+                          </h3>
+                        </div>
+                        <div className="w-0.5 h-10 bg-black"></div>
+                        <div className="type flex flex-col border-black">
+                          <h4 className="text-xl -mb-2 label text-primary-color font-bold">
+                            Rodzaj
+                          </h4>
+                          <h3 className="text-3xl label text-black font-bold">
+                            {journeyType.substring(0, 4) + "."}
+                          </h3>
+                        </div>
                       </div>
-                      <div className="w-0.5 h-10 bg-black"></div>
-                      <div className="type flex flex-col border-black">
-                        <h4 className="text-xl -mb-2 label text-primary-color font-bold">
-                          Rodzaj
-                        </h4>
-                        <h3 className="text-3xl label text-black font-bold">
-                          {journeyType.substring(0, 4) + "."}
-                        </h3>
+                      <div className="bottom mt-8">
+                        {transportData.map(
+                          (mode) =>
+                            mode.name == journey.transportType && (
+                              <div
+                                className="bg-back-color flex w-full flex-col justify-center items-center rounded-3xl duration-300 text-sm p-2 gap-1.5 font-bold drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] cursor-pointer border-2 border-transparent"
+                                key={mode.name}
+                              >
+                                <h4>PODRÓŻ</h4>
+                                <img src={mode.icon} />
+                                <h4>{mode.text}</h4>
+                              </div>
+                            )
+                        )}
                       </div>
                     </div>
-                    <div className="bottom mt-8">
-                      {transportData.map(
-                        (mode) =>
-                          mode.name == journey.transportType && (
-                            <div
-                              className="bg-back-color flex w-full flex-col justify-center items-center rounded-3xl duration-300 text-sm p-2 gap-1.5 font-bold drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] cursor-pointer border-2 border-transparent"
-                              key={mode.name}
-                            >
-                              <h4>PODRÓŻ</h4>
-                              <img src={mode.icon} />
-                              <h4>{mode.text}</h4>
+                    <div className="right snap-center snap-always flex flex-col min-w-0 overflow-hidden flex-1 pl-1 lg:pl-6 mt-2 mb-6 lg:mb-0">
+                      <div className="w-full h-full flex flex-col">
+                        <div className="people-item-data w-full grid sm:grid-cols-2 gap-y-6 gap-x-10">
+                          <div className="items flex flex-col">
+                            <div className="header flex flex-row justify-center lg:justify-start gap-2 mb-3 lg:mb-1">
+                              <h2 className="text-4xl font-bold">RZECZY</h2>
+                              <img
+                                className="w-10 bg-primary-color p-2 rounded-full"
+                                src={itemsIcon}
+                              />
                             </div>
-                          )
-                      )}
-                    </div>
-                  </div>
-                  <div className="right flex flex-col min-w-0 overflow-hidden flex-1 pl-6 mt-2">
-                    <div className="w-full h-full flex flex-col">
-                      <div className="people-item-data w-full grid grid-cols-2 gap-x-10">
-                        <div className="items flex flex-col">
-                          <div className="header flex flex-row gap-2 mb-1">
-                            <h2 className="text-4xl font-bold">RZECZY</h2>
-                            <img
-                              className="w-10 bg-primary-color p-2 rounded-full"
-                              src={itemsIcon}
-                            />
-                          </div>
-                          <ol className="items-list h-24 overflow-y-scroll">
-                            {journey.items!.length > 0 ? (
-                              journey.items?.map((item, idx) => (
-                                <li
-                                  key={idx}
-                                  className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap"
-                                >
-                                  {idx + 1}. {item}
+                            <ol className="items-list w-full h-24 overflow-y-scroll">
+                              {journey.items!.length > 0 ? (
+                                journey.items?.map((item, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap"
+                                  >
+                                    {idx + 1}. {item}
+                                  </li>
+                                ))
+                              ) : (
+                                <li className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap">
+                                  Są zbędne
                                 </li>
-                              ))
-                            ) : (
-                              <li className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap">
-                                Są zbędne
-                              </li>
-                            )}
-                          </ol>
+                              )}
+                            </ol>
+                          </div>
+                          <div className="people flex flex-col">
+                            <div className="header flex flex-row justify-center lg:justify-start gap-2 mb-3 lg:mb-1">
+                              <h2 className="text-4xl font-bold">OSOBY</h2>
+                              <img
+                                className="w-10 bg-primary-color p-2 rounded-full"
+                                src={peopleIcon}
+                              />
+                            </div>
+                            <ol className="people-list w-full h-24 overflow-y-scroll">
+                              {journey.people!.length > 0 ? (
+                                journey.people?.map((person, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap"
+                                  >
+                                    {idx + 1}. {person}
+                                  </li>
+                                ))
+                              ) : (
+                                <li className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap">
+                                  Nikt oprócz mnie
+                                </li>
+                              )}
+                            </ol>
+                          </div>
                         </div>
-                        <div className="people flex flex-col">
-                          <div className="header flex flex-row gap-2 mb-1">
-                            <h2 className="text-4xl font-bold">OSOBY</h2>
-                            <img
-                              className="w-10 bg-primary-color p-2 rounded-full"
-                              src={peopleIcon}
-                            />
-                          </div>
-                          <ol className="people-list h-24 overflow-y-scroll">
-                            {journey.people!.length > 0 ? (
-                              journey.people?.map((person, idx) => (
-                                <li
-                                  key={idx}
-                                  className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap"
-                                >
-                                  {idx + 1}. {person}
-                                </li>
-                              ))
-                            ) : (
-                              <li className="text-gray-400 font-bold text-lg leading-6 text-ellipsis overflow-hidden whitespace-nowrap">
-                                Nikt oprócz mnie
-                              </li>
-                            )}
-                          </ol>
+                        <button
+                          onClick={() => changeView(toggle)}
+                          className="w-auto h-16 bg-white mt-4 mb-6 text-xl font-bold text-gray-400 border-4 border-gray-300 rounded-xl overflow-hidden whitespace-nowrap"
+                        >
+                          WYŚWIETL TRASĘ
+                        </button>
+                        <hr className="h-[3px] bg-black -mt-2 mb-6"></hr>
+                        <div className="fuelprice w-full h-auto flex flex-col sm:flex-row gap-4 text-center sm:text-start items-center lg:items-end">
+                          <h2 className="w-auto font-bold text-2xl uppercase leading-7 text-primary-color overflow-hidden">
+                            Szacowany <br className="hidden sm:flex" /> koszt
+                            paliwa
+                          </h2>
+                          <h1 className="flex-1 w-full px-10 py-2 sm:p-0 h-14 flex justify-center items-center bg-primary-color rounded-full text-white font-bold text-4xl overflow-hidden whitespace-nowrap">
+                            {fuelPrice !== ""
+                              ? fuelPrice + " ZŁ"
+                              : "NIE DOTYCZY"}
+                          </h1>
                         </div>
                       </div>
-                      <button
-                        onClick={() => changeView(toggle)}
-                        className="w-auto h-16 bg-white mt-4 mb-6 text-xl font-bold text-gray-400 border-4 border-gray-300 rounded-xl overflow-hidden whitespace-nowrap"
-                      >
-                        WYŚWIETL TRASĘ
-                      </button>
-                      <hr className="h-[3px] bg-black -mt-2 mb-6"></hr>
-                      <div className="fuelprice w-full h-auto flex flex-row gap-4 items-end">
-                        <h2 className="w-auto font-bold text-2xl uppercase leading-7 text-primary-color overflow-hidden whitespace-nowrap">
-                          Szacowany <br /> koszt paliwa
-                        </h2>
-                        <h1 className="flex-1 h-14 flex justify-center items-center bg-primary-color rounded-full text-white font-bold text-4xl overflow-hidden whitespace-nowrap">
-                          {fuelPrice !== "" ? fuelPrice + " ZŁ" : "NIE DOTYCZY"}
-                        </h1>
-                      </div>
                     </div>
+                    <div className="lg:hidden gradient pointer-events-none w-full h-20 absolute bottom-0 left-0 rounded-2xl bg-gradient-to-b from-[rgba(190,255,201,0)] from-0% to-[rgba(190,255,201,0.9)] to-80%"></div>
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         {position !== undefined &&
           duration == null &&
