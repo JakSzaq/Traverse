@@ -29,6 +29,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
   createJourney,
   fuelPrices,
   getFuelPrices,
+  isExpanded,
 }) => {
   const [item, setItem] = useState("");
   const [person, setPerson] = useState("");
@@ -448,13 +449,14 @@ const JourneyForm: React.FC<JourneyFormI> = ({
             </div>
           </div>
         </div>
-        <div className="btn-container cursor-pointer col-span-2 h-28 mb-3 sm:h-24 bg-primary-color rounded-3xl flex justify-center items-center relative overflow-hidden before:content-[''] before:absolute before:bg-[rgba(255,255,255,.5)] before:duration-1000 before:skew-x-[-45deg] before:hover:skew-x-[-45deg] before:-left-56 before:hover:left-[110%] before:w-44 before:h-44">
+        <div className="btn-container cursor-pointer col-span-2 h-28 mb-3 lg:mb-0 sm:h-24 bg-primary-color rounded-3xl flex justify-center items-center relative overflow-hidden before:content-[''] before:absolute before:bg-[rgba(255,255,255,.5)] before:duration-1000 before:skew-x-[-45deg] before:hover:skew-x-[-45deg] before:-left-56 before:hover:left-[110%] before:w-44 before:h-44">
           <AnimatePresence>
-            {!isVisible && (
+            {!isVisible && !isExpanded && !isClicked && (
               <motion.div
                 onClick={() =>
                   buttonRef.current?.scrollIntoView({
                     behavior: "smooth",
+                    block: "center",
                   })
                 }
                 initial={{ opacity: 0 }}
@@ -463,7 +465,7 @@ const JourneyForm: React.FC<JourneyFormI> = ({
                 transition={{
                   duration: ".25",
                 }}
-                className="fixed bottom-0 w-20 h-20 rounded-full mb-7 animate-bounce bg-[rgba(255,255,255,.5)] flex justify-center backdrop-blur-3x; items-center drop-shadow-[0_0_20px_rgba(34,204,61,1)]"
+                className="fixed bottom-0 w-20 h-20 rounded-full z-50 mb-7 animate-bounce bg-[rgba(255,255,255,.5)] flex justify-center backdrop-blur-3x; items-center drop-shadow-[0_0_20px_rgba(34,204,61,1)]"
               >
                 <img className="absolute h-12" src={arrowDownIcon} />
               </motion.div>

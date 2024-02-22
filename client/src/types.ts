@@ -72,6 +72,8 @@ export interface JourneyPlacesI {
   markers: google.maps.Marker[];
   setMarkers: React.Dispatch<React.SetStateAction<google.maps.Marker[]>>;
   setMode: React.Dispatch<React.SetStateAction<JourneyMode | undefined>>;
+  isExpanded: boolean;
+  setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type JourneyMode = "CREATE" | "EDIT" | "VIEW";
@@ -90,6 +92,7 @@ export interface JourneyFormI {
   setMode: React.Dispatch<React.SetStateAction<JourneyMode>>;
   fuelPrices: FuelPricesI | undefined;
   getFuelPrices: () => Promise<void>;
+  isExpanded: boolean;
 }
 
 export interface JourneyMapI {
@@ -105,6 +108,8 @@ export interface JourneyMapI {
   transportData: TransportDataI[];
   mode: JourneyMode;
   markers: google.maps.Marker[];
+  isExpanded: boolean;
+  setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 //interface for user authentication
 export type UserT = {

@@ -5,6 +5,7 @@ import JourneyPanel from "../components/JourneyPanel";
 import LoadingScreen from "../components/LoadingScreen";
 import { JourneyPropsI, UserT } from "../types";
 import toast from "react-hot-toast";
+import Footer from "../components/Footer";
 
 const JourneyPage = () => {
   const { id } = useParams();
@@ -57,6 +58,7 @@ const JourneyPage = () => {
     <div className="page-content w-full h-screen relative bg-back-color z-0 flex flex-col flex-wrap justify-center items-center">
       <Navbar />
       {journey !== undefined && <JourneyPanel {...journey} mode="VIEW" />}
+      <Footer />
     </div>
   );
 };
