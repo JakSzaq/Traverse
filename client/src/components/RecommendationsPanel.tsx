@@ -76,7 +76,7 @@ const RecommendationsPanel: React.FC<RecommendationPanelI> = ({
               recommendationData[result!].images[selected]
             }`,
           }}
-          className="bottom -bottom-24 md:-bottom-[36rem] lg:-bottom-[36rem] xs:w-[150%] md:w-[250%] xl:w-[200%] w-[200%] max-w-6xl h-auto aspect-square absolute rounded-full flex justify-center items-center border-8 border-primary-color md:bg-contain bg-cover bg-no-repeat -z-10"
+          className="bottom opacity-50 lg:opacity-100 -bottom-24 md:-bottom-[36rem] lg:-bottom-[36rem] xs:w-[150%] md:w-[250%] xl:w-[200%] w-[200%] max-w-6xl h-auto aspect-square absolute rounded-full flex justify-center items-center border-8 border-primary-color md:bg-contain bg-cover bg-no-repeat -z-10"
         ></motion.div>
       </motion.div>
     </AnimatePresence>

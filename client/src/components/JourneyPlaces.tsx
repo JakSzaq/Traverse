@@ -22,6 +22,8 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
   markers,
   setMarkers,
   setMode,
+  isExpanded,
+  setIsExpanded,
 }) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -196,6 +198,9 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
   }, [attractions]);
 
   useEffect(() => {
+    if (selectedPlace !== undefined) {
+      setIsExpanded(false);
+    }
     if (selectedPlace == undefined) {
       map?.setCenter(position!);
     }
@@ -215,7 +220,7 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
   return (
     <div className="places bg-transparent w-full h-auto overflow-y-scroll flex flex-col justify-between gap-6 mb-8">
       {isLoaded ? (
-        <div className="content bg-white rounded-3xl h-full">
+        <div className="content bg-white rounded-3xl h-auto">
           <div className="heading w-full bg-white rounded-3xl col-span-2 py-4 px-6 relative">
             <hr className="h-[2px] bg-primary-color"></hr>
             <h3 className="absolute top-2.5 bg-white pr-4 text-lg text-primary-color font-bold">
@@ -223,8 +228,8 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
             </h3>
           </div>
           <div className="data flex flex-col flex-wrap justify-between mt-2 px-5">
-            <div className="header h-14 flex flex-col w-full">
-              <h2 className="text-5xl font-bold mb-2 text-ellipsis overflow-hidden whitespace-nowrap">
+            <div className="header sm:h-14 flex flex-col w-full">
+              <h2 className="text-2xl sm:text-5xl font-bold mb-2 text-center sm:text-left sm:text-ellipsis sm:overflow-hidden sm:whitespace-nowrap">
                 NAJLEPSZE W {journey.endPlace?.toUpperCase()}
               </h2>
             </div>
@@ -256,17 +261,17 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
                 }
               ></img>
             </div>
-            <hr className="separator h-1 bg-primary-color mt-2 mb-4" />
+            <hr className="separator h-1 bg-primary-color mt-2" />
             {selectedPlace == undefined ? (
-              <div className="places">
-                <div className="hotels flex flex-col">
-                  <div className="place-header flex flex-row items-center gap-2 text-3xl font-bold">
+              <div className="places w-full h-full">
+                <div className="hotels w-full h-auto flex flex-col">
+                  <div className="place-header sticky top-0 z-20 py-4 -mb-4 bg-white flex flex-row items-center gap-2 justify-center sm:justify-start text-2xl xs:text-3xl font-bold">
                     <h3>NOCLEGI</h3>
                     <div className="img-wrap w-10 h-10 bg-primary-color rounded-full flex justify-center items-center">
                       <img src={hotelIcon}></img>
                     </div>
                   </div>
-                  <div className="place-list w-full flex flex-row gap-4 my-4">
+                  <div className="place-list w-full grid sm:grid-cols-3 gap-4 my-4">
                     {hotels !== undefined &&
                       hotels.map((hotel, i) => (
                         <Place
@@ -279,14 +284,14 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
                   </div>
                 </div>
                 <div className="restaurants flex flex-col">
-                  <hr className="separator h-1 bg-primary-color mt-2 mb-4" />
-                  <div className="place-header flex flex-row items-center gap-2 text-3xl font-bold">
+                  <hr className="separator h-1 bg-primary-color mt-2" />
+                  <div className="place-header sticky top-0 z-20 py-4 -mb-4 bg-white flex flex-row items-center gap-2 justify-center sm:justify-start text-2xl xs:text-3xl font-bold">
                     <h3>RESTAURACJE</h3>
                     <div className="img-wrap w-10 h-10 bg-primary-color rounded-full flex justify-center items-center">
                       <img src={restaurantIcon}></img>
                     </div>
                   </div>
-                  <div className="place-list w-full flex flex-row gap-4 my-4">
+                  <div className="place-list w-full grid sm:grid-cols-3 gap-4 my-4">
                     {restaurants !== undefined &&
                       restaurants.map((restaurant, i) => (
                         <Place
@@ -299,14 +304,14 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
                   </div>
                 </div>
                 <div className="attractions flex flex-col">
-                  <hr className="separator h-1 bg-primary-color mt-2 mb-4" />
-                  <div className="place-header flex flex-row items-center gap-2 text-3xl font-bold">
+                  <hr className="separator h-1 bg-primary-color mt-2" />
+                  <div className="place-header sticky top-0 z-20 py-4 -mb-4 bg-white flex flex-row items-center gap-2 justify-center sm:justify-start text-2xl xs:text-3xl font-bold">
                     <h3>ATRAKCJE</h3>
                     <div className="img-wrap w-10 h-10 bg-primary-color rounded-full flex justify-center items-center">
                       <img src={attractionIcon}></img>
                     </div>
                   </div>
-                  <div className="place-list w-full flex flex-row gap-4 my-4">
+                  <div className="place-list w-full grid sm:grid-cols-3 gap-4 my-4">
                     {attractions !== undefined &&
                       attractions.map((attraction, i) => (
                         <Place
@@ -333,7 +338,7 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
       )}
       <div className="btn-container cursor-pointer col-span-2 min-h-[6rem] bg-primary-color rounded-3xl flex justify-center items-center relative overflow-hidden before:content-[''] before:absolute before:bg-[rgba(255,255,255,.5)] before:duration-1000 before:skew-x-[-45deg] before:hover:skew-x-[-45deg] before:-left-56 before:hover:left-[110%] before:w-44 before:h-44">
         <AnimatePresence>
-          {!isVisible && (
+          {!isVisible && !isExpanded && (
             <motion.div
               onClick={() =>
                 buttonRef.current?.scrollIntoView({
@@ -346,7 +351,7 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
               transition={{
                 duration: ".25",
               }}
-              className="fixed bottom-0 w-20 h-20 rounded-full mb-7 animate-bounce bg-[rgba(255,255,255,.5)] flex justify-center backdrop-blur-3x; items-center drop-shadow-[0_0_20px_rgba(34,204,61,1)]"
+              className="fixed bottom-0 w-20 h-20 rounded-full z-50 mb-7 animate-bounce bg-[rgba(255,255,255,.5)] flex justify-center backdrop-blur-3x; items-center drop-shadow-[0_0_20px_rgba(34,204,61,1)]"
             >
               <img className="absolute h-12" src={arrowDownIcon} />
             </motion.div>
@@ -356,7 +361,7 @@ const JourneyPlaces: React.FC<JourneyPlacesI> = ({
           ref={buttonRef}
           onClick={() => setMode("EDIT")}
           type="submit"
-          className="submit col-span-2 w-full h-full font-bold text-5xl bg-transparent rounded-3xl flex justify-center items-center gap-5 text-white"
+          className="submit col-span-2 w-full h-full text-left font-bold text-3xl xs:text-4xl sm:text-5xl bg-transparent rounded-3xl flex justify-center items-center xs:gap-5 p-6 sm:p-0 text-white"
         >
           EDYTUJ PODRÓŻ{" "}
           <img ref={imageRef} src={logoIcon} className="w-8 fill-white" />

@@ -31,9 +31,10 @@ const JourneyMap: React.FC<JourneyMapI> = ({
   transportData,
   mode,
   markers,
+  isExpanded,
+  setIsExpanded,
 }) => {
   const [toggle, setToggle] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
   const small = {
     url: pointerIcon,
@@ -91,7 +92,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
   return (
     <div
       className={`map lg:h-[90vh] duration-100 w-full bg-primary-color rounded-[3rem] ${
-        expanded ? "h-[90vh]" : "h-[30vh]"
+        isExpanded ? "h-[88vh]" : "h-[30vh]"
       }`}
     >
       <GoogleMap
@@ -130,9 +131,9 @@ const JourneyMap: React.FC<JourneyMapI> = ({
           />
         )}
         <img
-          onClick={() => setExpanded(!expanded)}
+          onClick={() => setIsExpanded(!isExpanded)}
           className="xs:flex lg:hidden expand scale-75 lg:scale-100 absolute top-0 right-0 m-4 rounded-lg border-2 border-white w-12 h-12 duration-100 bg-primary-color p-1.5 cursor-pointer"
-          src={expanded ? shrinkIcon : expandIcon}
+          src={isExpanded ? shrinkIcon : expandIcon}
         ></img>
         {mode == "VIEW" &&
           position !== undefined &&
@@ -140,7 +141,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
             <div className="w-full h-full absolute justify-center items-end pointer-events-none">
               <h2
                 className={`h-12 w-full lg:hidden absolute bottom-0 items-center justify-center backdrop-blur-3xl hover:bg-back-color rounded-full drop-shadow-[0_4px_2px_rgba(0,0,0,0.25)] text-center text-xs xs:text-sm sm:text-xl font-bold ${
-                  expanded ? "hidden" : "flex"
+                  isExpanded ? "hidden" : "flex"
                 }`}
               >
                 POWIĘKSZ MAPĘ ABY ZOBACZYĆ SZCZEGÓŁY PODRÓŻY
@@ -162,8 +163,8 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                 onClick={() => panToPoint(startPosition)}
               />
               <div
-                className={`w-full h-full absolute justify-center items-end lg:flex duration-300 p-6 pointer-events-none ${
-                  expanded ? "flex" : "hidden"
+                className={`w-full h-full absolute justify-center items-end lg:flex duration-300 p-2 xs:p-4 sm:p-6 pointer-events-none ${
+                  isExpanded ? "flex" : "hidden"
                 }`}
               >
                 <div
@@ -194,17 +195,17 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                   <div className="w-full h-full flex flex-wrap lg:flex-nowrap overflow-y-scroll snap-mandatory snap-y">
                     <div className="group left snap-center snap-always h-full flex flex-col lg:border-r-2 border-black w-full lg:w-[35%] lg:pr-7 duration-300 hover:w-full min-w-0 lg:overflow-hidden">
                       <div className="top flex flex-row justify-between w-full min-w-0 lg:mb-4">
-                        <h3 className="w-full font-bold text-3xl lg:text-4xl text-ellipsis overflow-hidden whitespace-nowrap text-primary-color">
+                        <h3 className="w-full font-bold text-2xl xs:text-3xl lg:text-4xl text-ellipsis overflow-hidden whitespace-nowrap text-primary-color">
                           {journey.startPlace !== undefined
                             ? journey.startPlace!.toUpperCase()
                             : ""}
                         </h3>
                         <img
-                          className="w-12 duration-300 group-hover:w-20 group-hover:animate-pulse"
+                          className="w-10 xs:w-12 duration-300 group-hover:w-20 group-hover:animate-pulse"
                           src={arrowIcon}
                         />
                       </div>
-                      <h3 className="font-bold inline-block text-5xl lg:-mt-5 lg:text-[4rem] text-ellipsis overflow-hidden whitespace-nowrap text-black">
+                      <h3 className="font-bold inline-block text-4xl xs:text-5xl lg:-mt-5 lg:text-[4rem] text-ellipsis overflow-hidden whitespace-nowrap text-black">
                         {journey.endPlace !== undefined
                           ? journey.endPlace!.toUpperCase()
                           : ""}
@@ -212,19 +213,19 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                       <hr className="h-[3px] bg-black mt-2 mb-6"></hr>
                       <div className="data flex flex-row justify-between items-center uppercase">
                         <div className="route flex flex-col border-black">
-                          <h4 className="text-xl -mb-2 label text-primary-color font-bold">
+                          <h4 className="xs:text-xl -mb-2 label text-primary-color font-bold">
                             Trasa
                           </h4>
-                          <h3 className="text-3xl label text-black font-bold">
+                          <h3 className="text-xl xs:text-3xl label text-black font-bold">
                             {journey.length}
                           </h3>
                         </div>
                         <div className="w-0.5 h-10 bg-black"></div>
                         <div className="type flex flex-col border-black">
-                          <h4 className="text-xl -mb-2 label text-primary-color font-bold">
+                          <h4 className="xs:text-xl -mb-2 label text-primary-color font-bold">
                             Rodzaj
                           </h4>
-                          <h3 className="text-3xl label text-black font-bold">
+                          <h3 className="text-xl xs:text-3xl label text-black font-bold">
                             {journeyType.substring(0, 4) + "."}
                           </h3>
                         </div>
@@ -248,7 +249,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                     <div className="right snap-center snap-always flex flex-col min-w-0 overflow-hidden flex-1 pl-1 lg:pl-6 mt-2 mb-6 lg:mb-0">
                       <div className="w-full h-full flex flex-col">
                         <div className="people-item-data w-full grid sm:grid-cols-2 gap-y-6 gap-x-10">
-                          <div className="items flex flex-col">
+                          <div className="scale-90 xs:scale-100 items flex flex-col">
                             <div className="header flex flex-row justify-center lg:justify-start gap-2 mb-3 lg:mb-1">
                               <h2 className="text-4xl font-bold">RZECZY</h2>
                               <img
@@ -273,7 +274,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                               )}
                             </ol>
                           </div>
-                          <div className="people flex flex-col">
+                          <div className="scale-90 xs:scale-100 people flex flex-col">
                             <div className="header flex flex-row justify-center lg:justify-start gap-2 mb-3 lg:mb-1">
                               <h2 className="text-4xl font-bold">OSOBY</h2>
                               <img
@@ -301,7 +302,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                         </div>
                         <button
                           onClick={() => changeView(toggle)}
-                          className="w-auto h-16 bg-white mt-4 mb-6 text-xl font-bold text-gray-400 border-4 border-gray-300 rounded-xl overflow-hidden whitespace-nowrap"
+                          className="w-auto h-16 bg-white mt-4 mb-6 xs:text-xl font-bold text-gray-400 border-4 border-gray-300 rounded-xl overflow-hidden whitespace-nowrap"
                         >
                           WYŚWIETL TRASĘ
                         </button>
@@ -311,7 +312,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                             Szacowany <br className="hidden sm:flex" /> koszt
                             paliwa
                           </h2>
-                          <h1 className="flex-1 w-full px-10 py-2 sm:p-0 h-14 flex justify-center items-center bg-primary-color rounded-full text-white font-bold text-4xl overflow-hidden whitespace-nowrap">
+                          <h1 className="flex-1 w-full px-10 py-2 sm:p-0 h-14 mb-4 sm:mb-0 flex justify-center items-center bg-primary-color rounded-full text-white font-bold text-2xl xs:text-4xl overflow-hidden whitespace-nowrap">
                             {fuelPrice !== ""
                               ? fuelPrice + " ZŁ"
                               : "NIE DOTYCZY"}
@@ -319,7 +320,7 @@ const JourneyMap: React.FC<JourneyMapI> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="lg:hidden gradient pointer-events-none w-full h-20 absolute bottom-0 left-0 rounded-2xl bg-gradient-to-b from-[rgba(190,255,201,0)] from-0% to-[rgba(190,255,201,0.9)] to-80%"></div>
+                    <div className="lg:hidden gradient pointer-events-none w-full h-20 absolute bottom-0 left-0 rounded-[50px] bg-gradient-to-b from-[rgba(190,255,201,0)] from-0% to-[rgba(190,255,201,0.9)] to-80%"></div>
                   </div>
                 </div>
               </div>

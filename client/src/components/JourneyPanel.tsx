@@ -46,6 +46,7 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
   const [cost, setCost] = useState<string>("");
   const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
   const [data, setData] = useState<JourneyPropsI>();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const [journey, setJourney] = useState<JourneyPropsI>({
     startPlace: props.startPlace,
@@ -456,6 +457,8 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
         transportData={transportData}
         mode={mode}
         markers={markers}
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
       />
       {mode == "VIEW" && isLoaded && (
         <JourneyPlaces
@@ -465,6 +468,8 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
           markers={markers}
           setMarkers={setMarkers}
           setMode={setCurrentMode}
+          isExpanded={isExpanded}
+          setIsExpanded={setIsExpanded}
         />
       )}
       {mode == "CREATE" || mode == "EDIT" ? (
@@ -478,6 +483,7 @@ const JourneyPanel: React.FC<JourneyPanelI> = (props) => {
           setMode={setMode}
           fuelPrices={fuelPrices}
           getFuelPrices={getFuelPrices}
+          isExpanded={isExpanded}
         />
       ) : (
         <></>
