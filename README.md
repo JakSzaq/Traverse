@@ -21,6 +21,6 @@ This project aims to provide users with a comprehensive tool for planning journe
 
 ## Launch
 
-Official website: [traverse.com](https://traverse-jn61.onrender.com)
+Official website: [traverse-jn61.onrender.com](https://traverse-jn61.onrender.com)
 
 
