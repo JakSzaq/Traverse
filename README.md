@@ -17,7 +17,7 @@ This project aims to provide users with a comprehensive tool for planning journe
 * javascript
 * express 4.18.2
 * mongodb 6.2.0
-* nodemon 3.0.1
+* node.js 20.11.0
 
 ## Launch
 
